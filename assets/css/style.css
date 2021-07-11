@@ -61,3 +61,8 @@ button span {
     float: none;
 }
 
+.login{
+	background-color: rgb(24, 64, 123) !important;
+	padding: 50px;
+	padding-top: 10%;
+}
