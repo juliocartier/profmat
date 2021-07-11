@@ -1,0 +1,63 @@
+.nav-color{
+	background-color: rgb(24, 64, 123) !important;
+}
+
+.container-fluid{
+	padding-left: 0px;
+	padding-right: 0px;
+}
+
+.container{
+	margin-top: 50px;
+}
+
+html{
+	scroll-behavior: smooth;
+}
+
+body{
+	font-family: 'Lato', sans-serif;
+}
+
+.color-footer{
+	background-color: rgb(24, 64, 123) !important;
+}
+
+.portfolioImg{
+	border-radius: 120px;
+}
+
+.sobre{
+	background-color: rgb(24, 64, 123) !important;
+	padding: 25px;
+}
+
+.row{
+	margin-right: 0px;
+    margin-left: 0px;
+}
+
+.conhecimento{
+	background-color: rgba(0, 0, 0, 0.07);
+	padding: 25px;
+}
+
+.portfolio{
+	background-color: rgba(0, 0, 0, 0.07);
+	padding: 25px;
+}
+
+button span {
+    /*overwriting*/
+    color: white;
+    font-size: 25px;
+}
+ 
+.card{
+	background-color: #ffffff00;
+	border: 1px solid rgba(0,0,0,2.125);
+	margin-bottom: 10px;
+    margin: 0 auto;
+    float: none;
+}
+
