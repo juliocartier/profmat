@@ -18,8 +18,8 @@ const { Pool } = require('pg')
 const pool = new Pool({
     user: 'postgres',
     host: 'localhost',
-    database: 'nodelogin',
-    password: '123456',
+    database: 'postgres',
+    password: '123',
     port: 5432,
   })
   
@@ -72,8 +72,8 @@ const pool = new Pool({
 // console.log('Server running at http://127.0.0.1:8080/');
 
 app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css'));
-app.use('/js', express.static(__dirname + 'node_modules/bootstrap/dist/js'));
-//app.use('/js', express.static(__dirname + 'node_modules/jquery/dist'));
+app.use('/js', express.static(__dirname + '/node_modules/bootstrap/dist/js'));
+app.use('/js', express.static(__dirname + '/node_modules/jquery/dist'));
 app.use(express.static("public"));
 
 app.use(session({
@@ -98,7 +98,7 @@ app.post('/login', function(request, response) {
 	var password = request.body.senha;
 	//console.log(username, password);
 	if (username && password) {
-		pool.query('SELECT * FROM accounts WHERE username = $1 AND password = $2', [username, password], function(error, results, fields) {
+		pool.query('SELECT * FROM CONTAS WHERE username = $1 AND password = $2', [username, password], function(error, results, fields) {
 			console.log(results);
 			//console.log('Entrou aqui', results.length);
 			if (results.rowCount > 0) {
