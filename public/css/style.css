@@ -70,3 +70,13 @@ button span {
 .color-list{
 	background-color: #ededed;
 }
+
+.button-template{
+	border-radius: 30px;
+    width: 290px;
+}
+
+.remove-space{
+	margin: 0;
+    padding: 0;
+}
