@@ -5,6 +5,8 @@ var path = require('path');
 var express = require('express');
 var session = require('express-session');
 var bodyParser = require('body-parser');
+var nodemailer = require('nodemailer');
+var smtpTransport = require('nodemailer-smtp-transport')
 
 
 
@@ -15,6 +17,7 @@ const PORT= process.env.PORT || 8080;
 
 const { Pool } = require('pg')
 
+//Conexão com o banco de dados
 const pool = new Pool({
     user: 'postgres',
     host: 'localhost',
@@ -22,6 +25,15 @@ const pool = new Pool({
     password: '123',
     port: 5432,
   })
+
+let transporter = nodemailer.createTransport(smtpTransport({    
+	service: 'gmail',
+	host: 'smtp.gmail.com', 
+	auth: {        
+		 user: 'juliocartier@gmail.com',        
+		 pass: 'cart1994'    
+	}
+}));
   
   /*pool.query('SELECT * FROM accounts', (err, res) => {
     console.log(err, res) 
@@ -92,6 +104,36 @@ app.get('/login', function(request, response) {
 	response.sendFile(path.join(__dirname + '/login.html'));
 });
 
+app.get('/download', function(request, response) {
+	response.download(__dirname + '/public/Template.doc');
+});
+
+app.post('/email', function(request, response) {
+
+	     var email = request.body.email2;
+         var assunto = request.body.assunto; 
+         var messagem = request.body.messagem;
+
+		 console.log("Entrou aqui", email, assunto, messagem);
+
+     options
+     const mailOptions = {
+          from: 'juliocartier@gmail.com',
+          to: email,                   // from req.body.to
+          subject: assunto,         //from req.body.subject
+          html: messagem             //from req.body.message
+      };
+     //delivery
+     transporter.sendMail(mailOptions, function(error, info){
+          if (error) {
+              console.log(error);  
+          } else {     
+              console.log('Email sent: ' + info.response);  
+          }   
+     });
+	
+
+});
 
 app.post('/login', function(request, response) {
 	var username = request.body.email;
