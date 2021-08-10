@@ -104,9 +104,24 @@ app.get('/login', function(request, response) {
 	response.sendFile(path.join(__dirname + '/login.html'));
 });
 
+app.get('/projeto', function(request, response) {
+	response.sendFile(path.join(__dirname + '/index_projeto.html'));
+});
+
+app.post('/projeto', function(request, response) {
+	var nome = request.body.nome;
+	var telefone = request.body.telefone;
+	var email = request.body.email; 
+	var indicacao = request.body.indicacao;
+	//var messagem = request.body.messagem;
+
+	console.log("Entrou aqui", nome, telefone, email, indicacao);
+});
+
 app.get('/download', function(request, response) {
 	response.download(__dirname + '/public/Template.doc');
 });
+
 
 app.post('/email', function(request, response) {
 
