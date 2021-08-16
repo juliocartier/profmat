@@ -28,10 +28,12 @@ const pool = new Pool({
 
 let transporter = nodemailer.createTransport(smtpTransport({    
 	service: 'gmail',
-	host: 'smtp.gmail.com', 
+	host: 'smtp.gmail.com',
+	port: 465,
+    secure: true, 
 	auth: {        
-		 user: 'juliocartier@gmail.com',        
-		 pass: 'cart1994'    
+		 user: 'calctarifas@gmail.com',        
+		 pass: 'cartier94'    
 	}
 }));
   
@@ -110,12 +112,30 @@ app.get('/projeto', function(request, response) {
 
 app.post('/projeto', function(request, response) {
 	var nome = request.body.nome;
-	var telefone = request.body.telefone;
-	var email = request.body.email; 
+	var email = request.body.email;
+	var cidade = request.body.cidade;
+	var nomeEscola = request.body.nomeEscola;
+	var telefone = request.body.telefone; 
 	var indicacao = request.body.indicacao;
-	//var messagem = request.body.messagem;
+	var messagem = request.body.messagem;
 
 	console.log("Entrou aqui", nome, telefone, email, indicacao);
+
+	var mailOptions = {
+		from: 'calctarifas@gmail.com',
+		to: 'juliocartier@gmail.com',
+		subject: 'Sending Email using Node.js',
+		text: 'That was easy!'
+	  };
+
+	  transporter.sendMail(mailOptions, function(error, info){
+		if (error) {
+		  console.log(error);
+		} else {
+		  console.log('Email sent: ' + info.response);
+		}
+	  });
+
 });
 
 app.get('/download', function(request, response) {
