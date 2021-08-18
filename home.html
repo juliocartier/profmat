@@ -41,9 +41,39 @@
 	<div class="container mt-4">
 		<div class="row">
 			<div class="col-sm-12 mt-5 text-center text-white">
-				<h3>Home</h3>
+				<h3>Inscrições dos Projetos</h3>
 			</div>			
 		</div>
+
+
+		<!-- <%= results.length %> -->
+
+		<table class="table">
+			<thead>
+			  <tr class="text-white">
+				<th scope="col">Nome</th>
+				<th scope="col">Email</th>
+				<th scope="col">Cidade</th>
+				<th scope="col">Nome da Escola</th>
+				<th scope="col">Telefone</th>
+				<th scope="col">Indicação</th>
+				<th scope="col">Ações</th>
+			  </tr>
+			</thead>
+			<tbody>
+				<% for (var i = 0; i < results.rowCount;  i++) { %>
+					<tr class="text-white">
+					  <td><%= results.rows[i].nome %></td>
+					  <td><%= results.rows[i].email %></td>
+					  <td><%= results.rows[i].cidade %></td>
+					  <td><%= results.rows[i].nomeescola %></td>
+					  <td><%= results.rows[i].telefone %></td>
+					  <td><%= results.rows[i].indicacaoprofessor %></td>
+					  <td><%= results.rows[i].acoes %></td>
+					</tr>    
+				   <% } %>	
+			</tbody>
+		  </table>
 
         
 		<!--<div class="row">
@@ -88,7 +118,8 @@
 </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script type="text/javascript" src="js/bootstrap.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
 
 	<script>
 		var data = new Date();
