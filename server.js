@@ -190,7 +190,7 @@ app.post('/login', function(request, response) {
 	//console.log(username, password);
 	if (username && password) {
 		pool.query('SELECT * FROM CONTAS WHERE username = $1 AND password = $2', [username, password], function(error, results, fields) {
-			//console.log(results);
+			console.log(results);
 			//console.log('Entrou aqui', results.length);
 			if (results.rowCount > 0) {
 				request.session.loggedin = true;
