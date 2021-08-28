@@ -19,7 +19,8 @@ app.engine('html', require('ejs').renderFile);
 
 const PORT= process.env.PORT || 8080;
 
-const { Pool } = require('pg')
+const { Pool } = require('pg');
+const { Console } = require('console');
 
 //Conexão com o banco de dados
 const pool = new Pool({
@@ -75,7 +76,7 @@ const transport = nodemailer.createTransport({
 // 			subject: 'Sending Email using Node.js',
 // 			text: 'That was easy!',
 // 			html: '<h1>That was easy!</h1>'
-// 		  }; 
+// 		  };
 
 // 		  const result = await transport.sendMail(mailOptions);
 // 		  return result
@@ -84,7 +85,7 @@ const transport = nodemailer.createTransport({
 // 	} catch (error){
 // 		return error
 // 	}
-// }  
+// }
 
 
 app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css'));
@@ -117,7 +118,7 @@ app.post('/projeto', function(request, response) {
 	var email = request.body.email;
 	var cidade = request.body.cidade;
 	var nomeEscola = request.body.nomeEscola;
-	var telefone = request.body.telefone; 
+	var telefone = request.body.telefone;
 	var indicacao = request.body.indicacao;
 	var messagem = request.body.messagem;
 
@@ -130,9 +131,7 @@ app.post('/projeto', function(request, response) {
     		pool.end();
   			}
 		);
-	
 	response.sendFile(path.join(__dirname + '/index_projeto.html'));
-	
 
 	/*var mailOptions = {
 		from: 'calctarifas@gmail.com',
@@ -159,7 +158,7 @@ app.get('/download', function(request, response) {
 app.post('/email', function(request, response) {
 
 	     var email = request.body.email2;
-         var assunto = request.body.assunto; 
+         var assunto = request.body.assunto;
          var messagem = request.body.messagem;
 
 		 console.log("Entrou aqui", email, assunto, messagem);
@@ -170,16 +169,15 @@ app.post('/email', function(request, response) {
 			subject: assunto,
 			text: messagem
 			//html: '<h1>That was easy!</h1>'
-		  }; 
+		  };
      	//delivery
 		 transport.sendMail(mailOptions, function(error, info){
 			if (error) {
-				console.log(error);  
-			} else {     
-				console.log('Email sent: ' + info.response);  
-			}   
+				console.log(error);
+			} else {
+				console.log('Email sent: ' + info.response);
+			}
 		});
-	
 		response.redirect('/#contato');
 
 });
@@ -211,8 +209,6 @@ app.post('/login', function(request, response) {
 
 app.get('/home', function(request, response) {
 	pool.query('SELECT * FROM PROJETOS', function(error, results) {
-		
-		
 		//console.log(results.rows[0].nome);
 
 		//response.sendFile(path.join(__dirname + '/home.html'));
@@ -230,7 +226,6 @@ app.get('/home', function(request, response) {
 	});
 
 	//response.sendFile(path.join(__dirname + '/home.html'));
-	
 
 	//return request.status(200).send(response.rows);
 
@@ -240,4 +235,6 @@ app.get('/sair', function(request, response) {
 	response.redirect('/');
 });
 
-app.listen(3000);
+app.listen(3000, () => {
+	console.log("Executando o projeto");
+});
