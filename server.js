@@ -6,12 +6,16 @@ var express = require('express');
 var session = require('express-session');
 var bodyParser = require('body-parser');
 var nodemailer = require('nodemailer');
+const {google} = require('googleapis');
 var smtpTransport = require('nodemailer-smtp-transport')
 
 
 
 
 var app = express();
+
+app.set('view engine', 'ejs');
+app.engine('html', require('ejs').renderFile);
 
 const PORT= process.env.PORT || 8080;
 
@@ -26,64 +30,62 @@ const pool = new Pool({
     port: 5432,
   })
 
-let transporter = nodemailer.createTransport(smtpTransport({    
+const CLIENT_ID = '1005697518083-vd1kegae5gt71duvipp5sfjpm0uf0i0m.apps.googleusercontent.com'
+const CLIENT_SECRET = 'YWV6isHBR_A4OE6RgGpar4Xr'
+const REDIRECT_URI = 'https://developers.google.com/oauthplayground'
+const REFRESH_TOKEN = '1//04acCyneBK9JdCgYIARAAGAQSNwF-L9IrSorznzbxc-E8L5wFHWdCqHCjKfGPWo79YSd3Fmp2ePFMk-x7CndOXS_J5BGvORIKuj8'
+
+const oAuth2Cliente = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI)
+oAuth2Cliente.setCredentials({ refresh_token: REFRESH_TOKEN })
+
+const accessToken = oAuth2Cliente.getAccessToken();
+const transport = nodemailer.createTransport({
 	service: 'gmail',
-	host: 'smtp.gmail.com',
-	port: 465,
-    secure: true, 
-	auth: {        
-		 user: 'calctarifas@gmail.com',        
-		 pass: 'cartier94'    
+	auth: {
+		type: 'OAuth2',
+		user: 'juliocartier@gmail.com',
+		clientId: CLIENT_ID,
+		clientSecret: CLIENT_SECRET,
+		refreshToken: REFRESH_TOKEN,
+		accessToken: accessToken
 	}
-}));
-  
-  /*pool.query('SELECT * FROM accounts', (err, res) => {
-    console.log(err, res) 
-    pool.end() 
-  })*/
+})
 
 
-// http.createServer(function (request, response) {
-    
-//     var filePath = '.' + request.url;
-//     if (filePath == './') {
-//         filePath = './index.html';
-//     }
+// async function sendMain(){
 
-//     var extname = String(path.extname(filePath)).toLowerCase();
-//     var mimeTypes = {
-//         '.html': 'text/html',
-//         '.js': 'text/javascript',
-//         '.css': 'text/css',
-//         '.json': 'application/json',
-//         '.png': 'image/png',
-//         '.jpg': 'image/jpg',
-//         '.svg': 'image/svg+xml'
-//     };
+// 	try {
 
-//     var contentType = mimeTypes[extname] || 'application/octet-stream';
+// 		const accessToken = await oAuth2Cliente.getAccessToken();
+// 		const transport = nodemailer.createTransport({
+// 			service: 'gmail',
+// 			auth: {
+// 				type: 'OAuth2',
+// 				user: 'juliocartier@gmail.com',
+// 				clientId: CLIENT_ID,
+// 				clientSecret: CLIENT_SECRET,
+// 				refreshToken: REFRESH_TOKEN,
+// 				accessToken: accessToken
+// 			}
+// 		})
 
-//     fs.readFile(filePath, function(error, content) {
-//         if (error) {
-//             if(error.code == 'ENOENT') {
-//                 fs.readFile('./404.html', function(error, content) {
-//                     response.writeHead(404, { 'Content-Type': 'text/html' });
-//                     response.end(content, 'utf-8');
-//                 });
-//             }
-//             else {
-//                 response.writeHead(500);
-//                 response.end('Sorry, check with the site admin for error: '+error.code+' ..\n');
-//             }
-//         }
-//         else {
-//             response.writeHead(200, { 'Content-Type': contentType });
-//             response.end(content, 'utf-8');
-//         }
-//     });
+// 		const mailOptions = {
+// 			from: 'juliocartier@gmail.com',
+// 			to: 'juliocartier@gmail.com',
+// 			subject: 'Sending Email using Node.js',
+// 			text: 'That was easy!',
+// 			html: '<h1>That was easy!</h1>'
+// 		  }; 
 
-// }).listen(PORT);
-// console.log('Server running at http://127.0.0.1:8080/');
+// 		  const result = await transport.sendMail(mailOptions);
+// 		  return result
+
+
+// 	} catch (error){
+// 		return error
+// 	}
+// }  
+
 
 app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css'));
 app.use('/js', express.static(__dirname + '/node_modules/bootstrap/dist/js'));
@@ -119,9 +121,20 @@ app.post('/projeto', function(request, response) {
 	var indicacao = request.body.indicacao;
 	var messagem = request.body.messagem;
 
-	console.log("Entrou aqui", nome, telefone, email, indicacao);
+	const text= "INSERT INTO PROJETOS(nome, email, cidade, nomeEscola, telefone, indicacaoProfessor, acoes) VALUES ($1, $2, $3, $4, $5, $6, $7)";
+	const valores = [nome, email, cidade, nomeEscola, telefone, indicacao, messagem]
 
-	var mailOptions = {
+		pool.query(text, valores,
+  					(err, res) => {
+    			console.log(err, res);
+    		pool.end();
+  			}
+		);
+	
+	response.sendFile(path.join(__dirname + '/index_projeto.html'));
+	
+
+	/*var mailOptions = {
 		from: 'calctarifas@gmail.com',
 		to: 'juliocartier@gmail.com',
 		subject: 'Sending Email using Node.js',
@@ -134,7 +147,7 @@ app.post('/projeto', function(request, response) {
 		} else {
 		  console.log('Email sent: ' + info.response);
 		}
-	  });
+	  });*/
 
 });
 
@@ -151,22 +164,23 @@ app.post('/email', function(request, response) {
 
 		 console.log("Entrou aqui", email, assunto, messagem);
 
-     options
-     const mailOptions = {
-          from: 'juliocartier@gmail.com',
-          to: email,                   // from req.body.to
-          subject: assunto,         //from req.body.subject
-          html: messagem             //from req.body.message
-      };
-     //delivery
-     transporter.sendMail(mailOptions, function(error, info){
-          if (error) {
-              console.log(error);  
-          } else {     
-              console.log('Email sent: ' + info.response);  
-          }   
-     });
+		 const mailOptions = {
+			from: 'juliocartier@gmail.com',
+			to: 'juliocartier@gmail.com',
+			subject: assunto,
+			text: messagem
+			//html: '<h1>That was easy!</h1>'
+		  }; 
+     	//delivery
+		 transport.sendMail(mailOptions, function(error, info){
+			if (error) {
+				console.log(error);  
+			} else {     
+				console.log('Email sent: ' + info.response);  
+			}   
+		});
 	
+		response.redirect('/#contato');
 
 });
 
@@ -182,7 +196,7 @@ app.post('/login', function(request, response) {
 				request.session.loggedin = true;
 				request.session.username = username;
 
-                console.log("Entrou aqui")
+                //console.log("Entrou aqui")
 				response.redirect('/home');
 			} else {
 				response.send('Incorrect Username and/or Password!');
@@ -196,11 +210,34 @@ app.post('/login', function(request, response) {
 });
 
 app.get('/home', function(request, response) {
-	response.sendFile(path.join(__dirname + '/home.html'));
+	pool.query('SELECT * FROM PROJETOS', function(error, results) {
+		
+		
+		//console.log(results.rows[0].nome);
+
+		//response.sendFile(path.join(__dirname + '/home.html'));
+
+		//response.status(200).json(results.rows)
+		//response.render('home');
+		//request.status(200).send(results.rows.nome);
+		//console.log('Entrou aqui', results.length);
+
+		//response.sendFile(path.join(__dirname + '/home.html'));
+
+		//response.render(path.join(__dirname, '/pages', 'home.html'));
+		response.render(__dirname + '/home.html', {results: results});
+		//res.render(path.join(__dirname, '/public', 'homepage.html'));
+	});
+
+	//response.sendFile(path.join(__dirname + '/home.html'));
+	
+
+	//return request.status(200).send(response.rows);
+
 });
 
 app.get('/sair', function(request, response) {
-	response.sendFile(path.join(__dirname + '/index.html'));
+	response.redirect('/');
 });
 
 app.listen(3000);
