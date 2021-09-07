@@ -8,7 +8,8 @@ var bodyParser = require('body-parser');
 var nodemailer = require('nodemailer');
 const {google} = require('googleapis');
 var smtpTransport = require('nodemailer-smtp-transport')
-
+const date = require('date-and-time');
+var moment = require('moment');
 
 
 
@@ -122,12 +123,16 @@ app.post('/projeto', function(request, response) {
 	var indicacao = request.body.indicacao;
 	var messagem = request.body.messagem;
 
-	const text= "INSERT INTO PROJETOS(nome, email, cidade, nomeEscola, telefone, indicacaoProfessor, acoes) VALUES ($1, $2, $3, $4, $5, $6, $7)";
-	const valores = [nome, email, cidade, nomeEscola, telefone, indicacao, messagem]
+	var data = new Date();
+	data_insert = date.format(data, 'DD/MM/YYYY HH:mm:ss');
+	//console.log(data);
+
+	const text= "INSERT INTO PROJETOS(nome, email, cidade, nomeEscola, telefone, indicacaoProfessor, acoes, data_cadastro) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)";
+	const valores = [nome, email, cidade, nomeEscola, telefone, indicacao, messagem, data_insert]
 
 		pool.query(text, valores,
   					(err, res) => {
-    			console.log(err, res);
+    			console.log("Valores Inseridos", res);
     		pool.end();
   			}
 		);
@@ -221,7 +226,7 @@ app.get('/home', function(request, response) {
 		//response.sendFile(path.join(__dirname + '/home.html'));
 
 		//response.render(path.join(__dirname, '/pages', 'home.html'));
-		response.render(__dirname + '/home.html', {results: results});
+		response.render(__dirname + '/home.html', {results: results, moment: moment});
 		//res.render(path.join(__dirname, '/public', 'homepage.html'));
 	});
 
