@@ -10,6 +10,7 @@ const {google} = require('googleapis');
 var smtpTransport = require('nodemailer-smtp-transport')
 const date = require('date-and-time');
 var moment = require('moment');
+//var $ = jQuery = require('jquery');
 
 
 
@@ -202,7 +203,8 @@ app.post('/login', function(request, response) {
                 //console.log("Entrou aqui")
 				response.redirect('/home');
 			} else {
-				response.send('Incorrect Username and/or Password!');
+				response.redirect('/login');
+				//response.send('Incorrect Username and/or Password!');
 			}
 			response.end();
 		});
@@ -233,6 +235,58 @@ app.get('/home', function(request, response) {
 	//response.sendFile(path.join(__dirname + '/home.html'));
 
 	//return request.status(200).send(response.rows);
+
+});
+
+app.post('/buscarDadosPorData', function(request, response) {
+
+	dataInicio = "'"+request.body['dataInicio']+"'";
+	dataFim = "'"+request.body['dataFim']+"'";
+
+	data_cadastro = []
+	nome = []
+	email = []
+	cidade = []
+	nomeescola = []
+	telefone = []
+	indicacaoprofessor = []
+	acoes = []
+
+	sqlString = "SELECT * FROM PROJETOS WHERE TO_CHAR(DATA_CADASTRO, 'DD/MM/YYYY') > REPLACE("+dataInicio+", ' ', '') AND TO_CHAR(DATA_CADASTRO, 'DD/MM/YYYY') <= REPLACE("+dataFim+", ' ', '')"
+
+	pool.query(sqlString, function(error, results) {
+		//console.log(results);
+
+		if (error) {
+			console.log(error.stack)
+		  } else {
+
+			for (var i = 0; i < results.rowCount;  i++) {
+				data_cadastro[i] = results.rows[i].data_cadastro
+				nome[i] = results.rows[i].nome
+				email[i] = results.rows[i].email
+				cidade[i] =  results.rows[i].cidade
+				nomeescola[i] = results.rows[i].nomeescola
+				telefone[i] = results.rows[i].telefone
+				indicacaoprofessor[i] = results.rows[i].indicacaoprofessor
+				acoes[i] = results.rows[i].acoes
+			}
+
+			console.log(results.rowCount)
+			console.log(dataInicio, dataFim)
+
+			//console.log("Data", sqlString, data_cadastro)
+		  }
+
+
+		resultados = {data_cadastro1: data_cadastro,
+					 nome1: nome,
+					email1: email}
+
+		response.send(JSON.stringify(resultados))
+	});
+
+	console.log("Entrou aqui", sqlString)
 
 });
 

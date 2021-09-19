@@ -9,8 +9,126 @@
 	<link rel="stylesheet" type="text/css" href="/css/style.css">
 	<link rel="stylesheet" type="text/css" href="/css/datepicker.css">
     <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
+	<!-- <script type="text/javascript" src="/js/home.js"></script> -->
+	<!-- <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script> -->
+	<!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script> -->
 
-	<script src="/js/home.js"></script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+	<script>
+
+	$.noConflict();
+	jQuery( document ).ready(function( $ ) {
+		console.log( "document loaded" );
+
+		$(function() {
+			$('input[name="daterange"]').daterangepicker({
+				opens: 'left',
+				"locale": {
+				"format": "DD/MM/YYYY",
+				"separator": " - ",
+				"applyLabel": "Aplicar",
+				"cancelLabel": "Cancelar",
+				"daysOfWeek": [
+				"Dom",
+				"Seg",
+				"Ter",
+				"Qua",
+				"Qui",
+				"Sex",
+				"Sab"
+				],
+				"monthNames": [
+				"Janeiro",
+				"Fevereiro",
+				"Março",
+				"Abril",
+				"Maio",
+				"Junho",
+				"Julho",
+				"Agosto",
+				"Setembro",
+				"Outubro",
+				"Novembro",
+				"Dezembro"
+				],
+				"firstDay": 1
+			}
+			}, function(start, end, label) {
+				console.log("A new date selection was made: " + start.format('DD/MM/YYYY') + ' to ' + end.format('DD/MM/YYYY'));
+			});
+		});
+
+		const d = new Date();
+
+		$("#dataBusca").val(d.getFullYear());
+
+		$("#buscar").click(function()  {
+
+			data = $("#dataBusca").val().split("-");
+
+			dataInicio = data[0];
+			dataFim = data[1];
+
+			console.log("Testeeeee", dataInicio, dataFim);
+
+			$.ajax({
+				url: '/buscarDadosPorData',
+				type: 'POST',
+				cache: false,
+				data: { dataInicio: dataInicio, dataFim: dataFim },
+				success: function(data){
+					console.log(data["data_cadastro1"]);
+
+					for (i = 0; i < data.length; i++) {
+						//console.log($("#data_cadastro").append(data["data_cadastro"]))
+						/* $("#nome").append(data["nome"])
+						$("#email").append(data["email"])
+						$("#cidade").append(data["cidade"])
+						$("#nomeescola").append(data["nomeescola"])
+						$("#telefone").append(data["telefone"])
+						$("#indicacaoprofessor").append(data["indicacaoprofessor"])
+						$("#acoes").append(data["acoes"]) */
+					}
+
+				}
+				, error: function(jqXHR, textStatus, err){
+					alert('text status '+textStatus+', err '+err)
+				}
+			})
+
+		});
+		// Code that uses jQuery's $ can follow here.
+	});
+		/*$(document).ready(function () {
+    		console.log( "document loaded" );
+
+			//	$(function() {
+				// $('input[name="birthday"]').daterangepicker({
+				// 	singleDatePicker: true,
+				// 	showDropdowns: true,
+				// 	minYear: 1901,
+				// 	maxYear: parseInt(moment().format('YYYY'),10)
+				// }, function(start, end, label) {
+				// 	var years = moment().diff(start, 'years');
+				// 	alert("You are " + years + " years old!");
+				// });
+			//});
+
+		});
+
+		$(function() {
+			$('input[name="daterange"]').daterangepicker({
+				opens: 'left'
+			}, function(start, end, label) {
+				console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+			});
+		});*/
+
+	</script>
 </head>
 <body>
 
@@ -50,10 +168,14 @@
 		<!-- <%= results.length %> -->
 		<div class="row">
 			<div class='col-sm-6'>
-				<input class="datepicker" data-date-format="mm/dd/yyyy">
+				<input type="text" name="daterange" id="dataBusca" />
+			 </div>
+			 <div class="col-sm-6">
+				<button type="submit" class="btn btn-primary" id="buscar">Buscar</button>
 			 </div>
 		</div>
 
+	<div class="table-responsive-sm">
 		<table class="table">
 			<thead>
 			  <tr class="text-white">
@@ -79,9 +201,21 @@
 					  <td><%= results.rows[i].indicacaoprofessor %></td>
 					  <td><%= results.rows[i].acoes %></td>
 					</tr>
-				   <% } %>
+				   <% } %> 
+
+				<!--<tr class="text-white">
+					  <td id="data_cadastro"></td>
+					  <td id="nome"></td>
+					  <td id="email"></td>
+					  <td id="cidade"></td>
+					  <td id="nomeescola"></td>
+					  <td id="telefone"></td>
+					  <td id="indicacaoprofessor"></td>
+					  <td id="acoes"></td>
+					</tr>-->
 			</tbody>
 		  </table>
+	</div>
 		<!--<div class="row">
            <div class="col-md-8 mx-auto mt-5 text-center">
 	           <form action="login" method="POST">
@@ -105,7 +239,7 @@
 	<footer class="page-footer font-small pt-5">
       <div class="row">
       	<div class="col-md-12 mx-auto text-center mp-2">
-      		<p class="text-white">
+      		<p>
       			 (84)3317-8313 ou secpos@ufersa.edu.br
       		</p>
 
@@ -115,7 +249,7 @@
 
       <div class="row">
       	<div class="col-sm-12 mx-auto">
-		  	<div class="footer-copyright text-center py-3 text-white">
+		  	<div class="footer-copyright text-center py-3">
 		  		<p><div id="dataAno"> </p>
 		  	</div>
 		 </div>
@@ -123,8 +257,8 @@
 	</footer>
 </div>
 
-<script src="js/bootstrap-datepicker.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="/js/bootstrap-datepicker.js"></script>
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
 
