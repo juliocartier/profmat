@@ -197,7 +197,12 @@ app.post('/login', function(request, response) {
 	if (username && password) {
 		pool.query('SELECT * FROM CONTAS WHERE username = $1 AND password = $2', [username, password], function(error, results, fields) {
 			console.log(results);
-			//console.log('Entrou aqui', results.length);
+
+			if (error) {
+				console.log(error.stack)
+				response.end();
+			} else {
+				//console.log('Entrou aqui', results.length);
 			if (results.rowCount > 0) {
 				request.session.loggedin = true;
 				request.session.username = username;
@@ -209,6 +214,7 @@ app.post('/login', function(request, response) {
 				//response.send('Incorrect Username and/or Password!');
 			}
 			response.end();
+			}
 		});
 	} else {
 		response.send('Please enter Username and Password!');
@@ -297,5 +303,5 @@ app.get('/sair', function(request, response) {
 });
 
 app.listen(PORT, () => {
-	console.log("Executando o projeto");
+	console.log("Executando o projeto", PORT);
 });
