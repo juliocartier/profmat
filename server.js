@@ -19,7 +19,9 @@ var app = express();
 app.set('view engine', 'ejs');
 app.engine('html', require('ejs').renderFile);
 
-const PORT= process.env.PORT || 8080;
+const PORT= process.env.PORT || 3000;
+
+//var port = process.env.PORT || 3000;
 
 const { Pool } = require('pg');
 const { Console } = require('console');
@@ -294,6 +296,6 @@ app.get('/sair', function(request, response) {
 	response.redirect('/');
 });
 
-app.listen(3000, () => {
+app.listen(PORT, () => {
 	console.log("Executando o projeto");
 });
