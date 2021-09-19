@@ -211,6 +211,7 @@ app.post('/login', function(request, response) {
 				response.redirect('/home');
 			} else {
 				response.redirect('/login');
+				response.end();
 				//response.send('Incorrect Username and/or Password!');
 			}
 			response.end();
