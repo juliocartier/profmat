@@ -107,3 +107,10 @@ button span {
 	font-size: 18px;
 	font-weight: bold;
 }
+
+.card img{
+	width: 100%;
+    height: auto;
+	max-height: 250px;
+    max-width: 406px;
+}
