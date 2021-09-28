@@ -13,7 +13,6 @@ var moment = require('moment');
 //var $ = jQuery = require('jquery');
 
 
-
 var app = express();
 
 app.set('view engine', 'ejs');
@@ -26,22 +25,30 @@ const PORT= process.env.PORT || 3000;
 const { Pool } = require('pg');
 const { Console } = require('console');
 
+var fs = require('fs');
+var obj = JSON.parse(fs.readFileSync('config.json', 'utf8'));
+
+//console.log(obj);
+
 //Conexão com o banco de dados
+//Foi inserido nessa configuração um arquivo "config.json"
 const pool = new Pool({
-    user: 'postgres',
-    host: 'localhost',
-    database: 'postgres',
-    password: '123',
-    port: 5432,
+    user: obj.banco.user,
+    host: obj.banco.host,
+    database: obj.banco.database,
+    password: obj.banco.password,
+    port: obj.banco.port,
   })
 
-const CLIENT_ID = '1005697518083-vd1kegae5gt71duvipp5sfjpm0uf0i0m.apps.googleusercontent.com'
-const CLIENT_SECRET = 'YWV6isHBR_A4OE6RgGpar4Xr'
-const REDIRECT_URI = 'https://developers.google.com/oauthplayground'
-const REFRESH_TOKEN = '1//04acCyneBK9JdCgYIARAAGAQSNwF-L9IrSorznzbxc-E8L5wFHWdCqHCjKfGPWo79YSd3Fmp2ePFMk-x7CndOXS_J5BGvORIKuj8'
+//console.log(pool)
 
-const oAuth2Cliente = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI)
-oAuth2Cliente.setCredentials({ refresh_token: REFRESH_TOKEN })
+//const CLIENT_ID = '1005697518083-vd1kegae5gt71duvipp5sfjpm0uf0i0m.apps.googleusercontent.com'
+//const CLIENT_SECRET = 'YWV6isHBR_A4OE6RgGpar4Xr'
+//const REDIRECT_URI = 'https://developers.google.com/oauthplayground'
+//const REFRESH_TOKEN = '1//04acCyneBK9JdCgYIARAAGAQSNwF-L9IrSorznzbxc-E8L5wFHWdCqHCjKfGPWo79YSd3Fmp2ePFMk-x7CndOXS_J5BGvORIKuj8'
+
+const oAuth2Cliente = new google.auth.OAuth2(obj.authentic.CLIENT_ID, obj.authentic.CLIENT_SECRET, obj.authentic.REDIRECT_URI)
+oAuth2Cliente.setCredentials({ refresh_token: obj.authentic.REFRESH_TOKEN })
 
 const accessToken = oAuth2Cliente.getAccessToken();
 const transport = nodemailer.createTransport({
@@ -49,9 +56,9 @@ const transport = nodemailer.createTransport({
 	auth: {
 		type: 'OAuth2',
 		user: 'juliocartier@gmail.com',
-		clientId: CLIENT_ID,
-		clientSecret: CLIENT_SECRET,
-		refreshToken: REFRESH_TOKEN,
+		clientId: obj.authentic.CLIENT_ID,
+		clientSecret: obj.authentic.CLIENT_SECRET,
+		refreshToken: obj.authentic.REFRESH_TOKEN,
 		accessToken: accessToken
 	}
 })

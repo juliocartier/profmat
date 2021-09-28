@@ -16,7 +16,55 @@
 
 	<script>
 		jQuery( document ).ready(function( $ ) {
+			
+			$('#estado').each(function(){
+					$.ajax({
+					url: 'https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome',
+					type: 'GET',
+					cache: false,
+					//data: { dataInicio: dataInicio, dataFim: dataFim },
+					success: function(result){
+						console.log(result);
+
+						for(i = 0; i < result.length; i++){
+							$("#estado").append($("<option value=" + result[i]['id'] + " >"+result[i]['sigla']+ " - " + result[i]['nome']+"</option>"))
+						}
+						
+
+					}
+					, error: function(jqXHR, textStatus, err){
+						console.log('text status '+textStatus+', err '+ err)
+					}
+				})
+			});
+
+			$('#estado').change(function(){
+				
+				valorEstado = $('#estado').val();
+				//$("#municipios").val();
+				
+				$.ajax({
+					url: 'https://servicodados.ibge.gov.br/api/v1/localidades/estados/'+ valorEstado +'/municipios',
+					type: 'GET',
+					cache: false,
+					success: function(result){
+						console.log("Entrou aqui 2", result);
+
+						for(i = 0; i < result.length; i++){
+							$("#municipios").append($("<option value=" + result[i]['id'] + " >"+result[i]['nome']+"</option>"))
+						}
+						
+
+					}
+					, error: function(jqXHR, textStatus, err){
+						console.log('text status '+textStatus+', err '+ err)
+					}
+				})
+			});
+			
 			$('#telefone').mask('(00) 00000-0000');
+
+
 		})
 	</script>
 </head>
@@ -433,34 +481,32 @@
 				 <div class="form-group">
 				    <label for="formGroupExampleInput" class="text-white">Nome</label>
 				    <input type="text" class="form-control" id="nome" name="nome" placeholder="Nome">
-				  </div>
-
-				  <div class="form-group">
+				  
 				    <label for="formGroupExampleInput" class="text-white">E-mail</label>
 				    <input type="text" class="form-control" id="email" name="email" placeholder="E-mail">
-				  </div>
 
-				  <div class="form-group">
-				    <label for="formGroupExampleInput" class="text-white">Cidade</label>
-				    <input type="text" class="form-control" id="cidade" name="cidade" placeholder="Cidade">
-				  </div>
+					<label for="formGroupExampleInput" class="text-white">Estado</label>
+					<select class="form-select" id="estado" aria-label="Default select example">
+						<option selected>Selecione o Estado</option>
+					</select>
 
-				  <div class="form-group">
+					<label for="formGroupExampleInput" class="text-white">Municipio</label>
+					<select class="form-select" id="municipios" aria-label="Default select example">
+						<option selected>Selecione o Municipio</option>
+					</select>
+				  
+					<!-- <label for="formGroupExampleInput" class="text-white">Cidade</label>
+				    <input type="text" class="form-control" id="cidade" name="cidade" placeholder="Cidade"> -->
+	
 				    <label for="formGroupExampleInput" class="text-white">Nome da Escola</label>
 				    <input type="text" class="form-control" id="nomeEscola" name="nomeEscola" placeholder="Nome da Escola">
-				  </div>
 
-				  <div class="form-group">
 				    <label for="formGroupExampleInput" class="text-white">Telefone</label>
 				    <input type="text" class="form-control" id="telefone" name="telefone" placeholder="Telefone">
-				  </div>
 
-                  <div class="form-group">
 				    <label for="formGroupExampleInput" class="text-white">Indicação Professor</label>
 				    <input type="text" class="form-control" id="indicacao" name="indicacao" placeholder="Indicação Professor">
-				  </div>
 
-				  <div class="form-group">
 				    <label for="messagem" class="text-white">Tipo de ações que pretende fazer</label>
 				    <textarea class="form-control" id="messagem" name="messagem" rows="3"></textarea>
 				  </div>
