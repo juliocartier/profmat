@@ -10,7 +10,6 @@ const {google} = require('googleapis');
 var smtpTransport = require('nodemailer-smtp-transport')
 const date = require('date-and-time');
 var moment = require('moment');
-//var $ = jQuery = require('jquery');
 
 
 var app = express();
@@ -20,12 +19,9 @@ app.engine('html', require('ejs').renderFile);
 
 const PORT= process.env.PORT || 3000;
 
-//var port = process.env.PORT || 3000;
-
 const { Pool } = require('pg');
 const { Console } = require('console');
 
-var fs = require('fs');
 var obj = JSON.parse(fs.readFileSync('config.json', 'utf8'));
 
 //console.log(obj);
@@ -125,24 +121,33 @@ app.get('/projeto', function(request, response) {
 });
 
 app.post('/projeto', function(request, response) {
+	//console.log("Entrou aqqqqq", request.body.nome)
+	
 	var nome = request.body.nome;
 	var email = request.body.email;
-	var cidade = request.body.cidade;
+	var uf = request.body.estado;
+	var cidade = request.body.municipios;
 	var nomeEscola = request.body.nomeEscola;
 	var telefone = request.body.telefone;
 	var indicacao = request.body.indicacao;
 	var messagem = request.body.messagem;
 
 	var data = new Date();
-	data_insert = date.format(data, 'DD/MM/YYYY HH:mm:ss');
-	//console.log(data);
+	data_insert = date.format(data, 'YYYY-MM-DD HH:mm:ss');
+	//console.log(request.body.uf);
 
-	const text= "INSERT INTO PROJETOS(nome, email, cidade, nomeEscola, telefone, indicacaoProfessor, acoes, data_cadastro) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)";
-	const valores = [nome, email, cidade, nomeEscola, telefone, indicacao, messagem, data_insert]
+	const text= "INSERT INTO PROJETOS(nome, email, uf, cidade, nomeEscola, telefone, indicacaoProfessor, acoes, data_cadastro) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)";
+	const valores = [nome, email, uf, cidade, nomeEscola, telefone, indicacao, messagem, data_insert]
 
+	console.log(text, valores)
 		pool.query(text, valores,
   					(err, res) => {
-    			console.log("Valores Inseridos", res);
+						if (err) {
+							console.log(err.stack)
+						  } else {
+							console.log("Valores Inseridos", res);
+						}
+
     		pool.end();
   			}
 		);
@@ -202,7 +207,7 @@ app.post('/login', function(request, response) {
 	var password = request.body.senha;
 	//console.log(username, password);
 	if (username && password) {
-		pool.query('SELECT * FROM CONTAS WHERE username = $1 AND password = $2', [username, password], function(error, results, fields) {
+		pool.query('SELECT * FROM contas WHERE username = $1 AND password = $2', [username, password], function(error, results, fields) {
 			console.log(results);
 
 			if (error) {
@@ -232,25 +237,19 @@ app.post('/login', function(request, response) {
 
 app.get('/home', function(request, response) {
 	pool.query('SELECT * FROM PROJETOS', function(error, results) {
-		//console.log(results.rows[0].nome);
-
-		//response.sendFile(path.join(__dirname + '/home.html'));
-
-		//response.status(200).json(results.rows)
-		//response.render('home');
-		//request.status(200).send(results.rows.nome);
-		//console.log('Entrou aqui', results.length);
-
-		//response.sendFile(path.join(__dirname + '/home.html'));
-
-		//response.render(path.join(__dirname, '/pages', 'home.html'));
+		
 		response.render(__dirname + '/home.html', {results: results, moment: moment});
 		//res.render(path.join(__dirname, '/public', 'homepage.html'));
 	});
 
-	//response.sendFile(path.join(__dirname + '/home.html'));
+});
 
-	//return request.status(200).send(response.rows);
+app.get('/cadastro', function(request, response) {
+	//pool.query('SELECT * FROM PROJETOS', function(error, results) {
+		
+	response.render(__dirname + '/cadastro-projeto.html');
+		//res.render(path.join(__dirname, '/public', 'homepage.html'));
+	//});
 
 });
 
@@ -268,41 +267,47 @@ app.post('/buscarDadosPorData', function(request, response) {
 	indicacaoprofessor = []
 	acoes = []
 
-	sqlString = "SELECT * FROM PROJETOS WHERE TO_CHAR(DATA_CADASTRO, 'DD/MM/YYYY') > REPLACE("+dataInicio+", ' ', '') AND TO_CHAR(DATA_CADASTRO, 'DD/MM/YYYY') <= REPLACE("+dataFim+", ' ', '')"
-
+	//sqlString = "SELECT * FROM PROJETOS WHERE TO_CHAR(DATA_CADASTRO, 'DD/MM/YYYY') > REPLACE("+dataInicio+", ' ', '') AND TO_CHAR(DATA_CADASTRO, 'DD/MM/YYYY') <= REPLACE("+dataFim+", ' ', '')"
+	sqlString = "SELECT * FROM projetos"
 	pool.query(sqlString, function(error, results) {
 		//console.log(results);
 
 		if (error) {
 			console.log(error.stack)
+
+			response.send(JSON.stringify(error.stack))
 		  } else {
 
+			//console.log(results.fields)
+
 			for (var i = 0; i < results.rowCount;  i++) {
-				data_cadastro[i] = results.rows[i].data_cadastro
-				nome[i] = results.rows[i].nome
+				console.log(results.fields[i])
+				//data_cadastro[i] = results.rows[i].data_cadastro
+				/*nome[i] = results.rows[i].nome
 				email[i] = results.rows[i].email
 				cidade[i] =  results.rows[i].cidade
 				nomeescola[i] = results.rows[i].nomeescola
 				telefone[i] = results.rows[i].telefone
 				indicacaoprofessor[i] = results.rows[i].indicacaoprofessor
-				acoes[i] = results.rows[i].acoes
+				acoes[i] = results.rows[i].acoes*/
 			}
 
-			console.log(results.rowCount)
-			console.log(dataInicio, dataFim)
+			//console.log(results.rowCount)
+			//console.log(dataInicio, dataFim)
+
+			resultados = {data_cadastro: data_cadastro}
+			console.log(resultados)
+
+			response.send(JSON.stringify(resultados))
 
 			//console.log("Data", sqlString, data_cadastro)
 		  }
 
 
-		resultados = {data_cadastro1: data_cadastro,
-					 nome1: nome,
-					email1: email}
-
-		response.send(JSON.stringify(resultados))
+		
 	});
 
-	console.log("Entrou aqui", sqlString)
+	//console.log("Entrou aqui", sqlString)
 
 });
 

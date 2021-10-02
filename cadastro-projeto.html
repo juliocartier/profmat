@@ -24,48 +24,6 @@
 	jQuery( document ).ready(function( $ ) {
 		console.log( "document loaded" );
 
-		$(function() {
-			$('input[name="daterange"]').daterangepicker({
-				opens: 'left',
-				"locale": {
-				"format": "DD/MM/YYYY",
-				"separator": " - ",
-				"applyLabel": "Aplicar",
-				"cancelLabel": "Cancelar",
-				"daysOfWeek": [
-				"Dom",
-				"Seg",
-				"Ter",
-				"Qua",
-				"Qui",
-				"Sex",
-				"Sab"
-				],
-				"monthNames": [
-				"Janeiro",
-				"Fevereiro",
-				"Março",
-				"Abril",
-				"Maio",
-				"Junho",
-				"Julho",
-				"Agosto",
-				"Setembro",
-				"Outubro",
-				"Novembro",
-				"Dezembro"
-				],
-				"firstDay": 1
-			}
-			}, function(start, end, label) {
-				console.log("A new date selection was made: " + start.format('DD/MM/YYYY') + ' to ' + end.format('DD/MM/YYYY'));
-			});
-		});
-
-		const d = new Date();
-
-		$("#dataBusca").val(d.getFullYear());
-
 		$("#buscar").click(function()  {
 
 			data = $("#dataBusca").val().split("-");
@@ -103,30 +61,6 @@
 		});
 		// Code that uses jQuery's $ can follow here.
 	});
-		/*$(document).ready(function () {
-    		console.log( "document loaded" );
-
-			//	$(function() {
-				// $('input[name="birthday"]').daterangepicker({
-				// 	singleDatePicker: true,
-				// 	showDropdowns: true,
-				// 	minYear: 1901,
-				// 	maxYear: parseInt(moment().format('YYYY'),10)
-				// }, function(start, end, label) {
-				// 	var years = moment().diff(start, 'years');
-				// 	alert("You are " + years + " years old!");
-				// });
-			//});
-
-		});
-
-		$(function() {
-			$('input[name="daterange"]').daterangepicker({
-				opens: 'left'
-			}, function(start, end, label) {
-				console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
-			});
-		});*/
 
 	</script>
 </head>
@@ -142,11 +76,7 @@
 	  <div class="collapse navbar-collapse" id="navbarSupportedContent">
 	    <ul class="navbar-nav mr-auto">
 	      <li class="nav-item active">
-	        <a class="nav-link text-white" href="home">Home</a>
-	      </li>
-
-		  <li class="nav-item active">
-	        <a class="nav-link text-white" href="cadastro">Cadastro</a>
+	        <a class="nav-link text-white" href="home">Home <span class="sr-only">(current)</span></a>
 	      </li>
 	  	</ul>
 	  	<ul class="navbar-nav ml-auto">
@@ -164,62 +94,27 @@
 	<div class="container mt-4">
 		<div class="row">
 			<div class="col-sm-12 mt-5 text-center text-white">
-				<h3>Inscrições dos Projetos</h3>
+				<h3>Cadastro Projetos</h3>
 			</div>
 		</div>
 
+        <div class="row">
+            <div class="col-md-8 mx-auto mt-5 text-center">
+                <form action="projeto">
+                  <div class="form-group">
+                     <label for="formGroupExampleInput" class="text-white">Titulo do Projeto</label>
+                     <input type="text" class="form-control" id="nome" name="nome" placeholder="Titulo do Projeto">
+                   
+                     <label for="messagem" class="text-white">Resumo</label>
+                     <textarea class="form-control" id="messagem" name="resumo" rows="3"></textarea>
 
-		<!-- <%= results.length %> -->
-		<div class="row">
-			<div class='col-sm-6'>
-				<input type="text" name="daterange" id="dataBusca" />
-			 </div>
-			 <div class="col-sm-6">
-				<button type="submit" class="btn btn-primary" id="buscar">Buscar</button>
-			 </div>
-		</div>
-
-	<div class="table-responsive-sm">
-		<table class="table">
-			<thead>
-			  <tr class="text-white">
-				<th scope="col">Data Cadastro</th>
-				<th scope="col">Nome</th>
-				<th scope="col">Email</th>
-				<th scope="col">Cidade</th>
-				<th scope="col">Nome da Escola</th>
-				<th scope="col">Telefone</th>
-				<th scope="col">Indicação</th>
-				<th scope="col">Ações</th>
-			  </tr>
-			</thead>
-			<tbody>
-				<% for (var i = 0; i < results.rowCount;  i++) { %>
-					<tr class="text-white">
-					  <td><%= moment(results.rows[i].data_cadastro).format('DD/MM/YYYY HH:MM:SS') %></td>
-					  <td><%= results.rows[i].nome %></td>
-					  <td><%= results.rows[i].email %></td>
-					  <td><%= results.rows[i].cidade %></td>
-					  <td><%= results.rows[i].nomeescola %></td>
-					  <td><%= results.rows[i].telefone %></td>
-					  <td><%= results.rows[i].indicacaoprofessor %></td>
-					  <td><%= results.rows[i].acoes %></td>
-					</tr>
-				   <% } %> 
-
-				<!--<tr class="text-white">
-					  <td id="data_cadastro"></td>
-					  <td id="nome"></td>
-					  <td id="email"></td>
-					  <td id="cidade"></td>
-					  <td id="nomeescola"></td>
-					  <td id="telefone"></td>
-					  <td id="indicacaoprofessor"></td>
-					  <td id="acoes"></td>
-					</tr>-->
-			</tbody>
-		  </table>
-	</div>
+                     <label for="messagem" class="text-white">Texto</label>
+                     <textarea class="form-control" id="messagem" name="texto" rows="3"></textarea>
+                   </div>
+                   <button id="btnEnviar" class="btn btn-primary">Enviar</button>
+                </form>
+            </div>
+        </div>
 		<!--<div class="row">
            <div class="col-md-8 mx-auto mt-5 text-center">
 	           <form action="login" method="POST">
@@ -238,6 +133,36 @@
 
 	</div>
 </div>
+
+<div class="login">
+	<div class="container mt-4">
+		<div class="row">
+			<div class="col-sm-12 mt-5 text-center text-white">
+				<h3>Listagem dos Projetos</h3>
+			</div>
+		</div>
+
+        <div class="row">
+        </div>
+		<!--<div class="row">
+           <div class="col-md-8 mx-auto mt-5 text-center">
+	           <form action="login" method="POST">
+				  <div class="form-group">
+				    <label for="formGroupExampleInput" class="text-white">E-mail</label>
+				    <input type="text" class="form-control" id="email" name="email" placeholder="E-mail">
+				  </div>
+				  <div class="form-group">
+				    <label for="formGroupExampleInput3" class="text-white">Senha</label>
+				    <input type="password" class="form-control" id="senha" name="senha" placeholder="Senha">
+				  </div>
+				  <button type="submit" class="btn btn-primary">Enviar</button>
+			   </form>
+           </div>
+       </div>-->
+
+	</div>
+</div>
+
 
 <div class="container-fluid color-footer">
 	<footer class="page-footer font-small pt-5">

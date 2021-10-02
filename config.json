@@ -1,8 +1,8 @@
 { "banco" : {
-    "user": "postgres",
-    "host": "localhost",
-    "database": "postgres",
-    "password": "123",
+    "user": "hkqapbhp",
+    "host": "fanny.db.elephantsql.com",
+    "database": "hkqapbhp",
+    "password": "P5NwSmkvPb8jDateB3So6uQTzE5ySCne",
     "port": 5432
 }, 
 

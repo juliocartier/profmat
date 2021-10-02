@@ -27,7 +27,7 @@
 						console.log(result);
 
 						for(i = 0; i < result.length; i++){
-							$("#estado").append($("<option value=" + result[i]['id'] + " >"+result[i]['sigla']+ " - " + result[i]['nome']+"</option>"))
+							$("#estado").append($("<option value=" + result[i]['sigla'] + " >"+result[i]['sigla']+ " - " + result[i]['nome']+"</option>"))
 						}
 						
 
@@ -51,7 +51,7 @@
 						console.log("Entrou aqui 2", result);
 
 						for(i = 0; i < result.length; i++){
-							$("#municipios").append($("<option value=" + result[i]['id'] + " >"+result[i]['nome']+"</option>"))
+							$("#municipios").append($("<option value=" + result[i]['nome'] + " >"+result[i]['nome']+"</option>"))
 						}
 						
 
@@ -64,6 +64,35 @@
 			
 			$('#telefone').mask('(00) 00000-0000');
 
+			$('#btnEnviar').click(function(){
+
+				nome = $("#nome").val()
+				email = $("#email").val()
+				estado = $("#estado").val()
+				municipios = $("#municipios").val()
+				nomeEscola = $("#nomeEscola").val()
+				telefone = $("#telefone").val()
+				indicacao = $("#indicacao").val()
+				messagem = $("#messagem").val()
+
+				dados = { nome, email, estado, municipios, nomeEscola, telefone, indicacao, messagem  }
+
+				console.log(dados);
+
+				$.ajax({
+					url: '/projeto',
+					type: 'POST',
+					cache: false,
+					data: dados,
+					success: function(result){
+						console.log("Entrou aqui 2", result);
+
+					}
+					, error: function(jqXHR, textStatus, err){
+						console.log('text status '+textStatus+', err '+ err)
+					}
+				})
+			})
 
 		})
 	</script>
@@ -109,7 +138,7 @@
 			<div class="row">
 				<div class="col-md-4 mx-auto mt-3 text-center d-flex align-items-stretch">
 					<div class="card">
-						<img class="card-img-top" src="img/img1.jpg" alt="Card image cap">
+						<img class="img-fluid" src="img/img1.jpg" alt="Card image cap">
 						<div class="card-body">
 						  <h5 class="card-title text-white">PROFMAT nas Escolas</h5>
 						  <p class="card-text text-white">O projeto visa compartilhar com a rede de ensino local, principalmente com a rede pública, ações de ensino.</p>
@@ -125,7 +154,7 @@
 
 				<div class="col-md-4 mx-auto mt-3 text-center d-flex align-items-stretch">
 					<div class="card">
-						<img class="card-img-top" src="img/img2.jpg" alt="Card image cap">
+						<img class="card-img-top img-fluid" src="img/img2.jpg" alt="Card image cap">
 						<div class="card-body">
 						  <h5 class="card-title text-white">Pesquisa sobre a evação no ensino à distância da UFERSA</h5>
 						  <p class="card-text text-white">Esta pesquisa busca conhecer os principais elemento relacionados à evasão no Ensino à dos cursos distância da UFERSA.</p>
@@ -141,7 +170,7 @@
 
 				<div class="col-md-4 mx-auto mt-3 text-center d-flex align-items-stretch">
 					<div class="card">
-						<img class="card-img-top" src="img/img3.jpg" alt="Card image cap">
+						<img class="card-img-top img-fluid" src="img/img3.jpg" alt="Card image cap">
 						<div class="card-body">
 						  <h5 class="card-title text-white">Programa de Aperfeiçoamento de Professores de Matemática</h5>
 						  <p class="card-text text-white">Trata-se de um Programa de apio ao auto deesnvolvimento em Matemática - tem o intuito de colaborar com os(as) estudantes de graduação da UFERSA.</p>
@@ -477,7 +506,7 @@
 
 		<div class="row">
            <div class="col-md-8 mx-auto mt-5 text-center">
-	           <form action="projeto" method="POST">
+	           <form action="projeto">
 				 <div class="form-group">
 				    <label for="formGroupExampleInput" class="text-white">Nome</label>
 				    <input type="text" class="form-control" id="nome" name="nome" placeholder="Nome">
@@ -494,7 +523,6 @@
 					<select class="form-select" id="municipios" aria-label="Default select example">
 						<option selected>Selecione o Municipio</option>
 					</select>
-				  
 					<!-- <label for="formGroupExampleInput" class="text-white">Cidade</label>
 				    <input type="text" class="form-control" id="cidade" name="cidade" placeholder="Cidade"> -->
 	
@@ -510,7 +538,7 @@
 				    <label for="messagem" class="text-white">Tipo de ações que pretende fazer</label>
 				    <textarea class="form-control" id="messagem" name="messagem" rows="3"></textarea>
 				  </div>
-				  <button type="submit" class="btn btn-primary">Enviar</button>
+				  <button id="btnEnviar" class="btn btn-primary">Enviar</button>
 			   </form>
            </div>
        </div>
