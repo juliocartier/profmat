@@ -85,13 +85,15 @@
 
 					for (i = 0; i < data.length; i++) {
 						//console.log($("#data_cadastro").append(data["data_cadastro"]))
-						/* $("#nome").append(data["nome"])
+						$("#data_cadastro").append(data["data_cadastro"])
+						$("#nome").append(data["nome"])
 						$("#email").append(data["email"])
+						$("#uf").append(data["uf"])
 						$("#cidade").append(data["cidade"])
 						$("#nomeescola").append(data["nomeescola"])
 						$("#telefone").append(data["telefone"])
 						$("#indicacaoprofessor").append(data["indicacaoprofessor"])
-						$("#acoes").append(data["acoes"]) */
+						$("#acoes").append(data["acoes"])
 					}
 
 				}
@@ -169,7 +171,6 @@
 		</div>
 
 
-		<!-- <%= results.length %> -->
 		<div class="row">
 			<div class='col-sm-6'>
 				<input type="text" name="daterange" id="dataBusca" />
@@ -194,18 +195,17 @@
 			  </tr>
 			</thead>
 			<tbody>
-				<% for (var i = 0; i < results.rowCount;  i++) { %>
-					<tr class="text-white">
-					  <td><%= moment(results.rows[i].data_cadastro).format('DD/MM/YYYY HH:MM:SS') %></td>
-					  <td><%= results.rows[i].nome %></td>
-					  <td><%= results.rows[i].email %></td>
-					  <td><%= results.rows[i].cidade %></td>
-					  <td><%= results.rows[i].nomeescola %></td>
-					  <td><%= results.rows[i].telefone %></td>
-					  <td><%= results.rows[i].indicacaoprofessor %></td>
-					  <td><%= results.rows[i].acoes %></td>
-					</tr>
-				   <% } %> 
+				 <!--<tr class="text-white">
+					  <td id="data_cadastro"></td>
+					  <td id="nome"></td>
+					  <td id="email"></td>
+					  <td id="uf"></td>
+					  <td id="municipios"></td>
+					  <td id="nomeescola"></td>
+					  <td id="telefone"></td>
+					  <td id="indicacaoprofessor"></td>
+					  <td id="acoes"></td>
+					</tr> -->
 
 				<!--<tr class="text-white">
 					  <td id="data_cadastro"></td>

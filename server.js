@@ -113,16 +113,16 @@ app.get('/', function(request, response) {
 });
 
 app.get('/login', function(request, response) {
-	response.sendFile(path.join(__dirname + '/login.html'));
+	response.sendFile(path.join(__dirname + '/pages/login.html'));
 });
 
 app.get('/projeto', function(request, response) {
-	response.sendFile(path.join(__dirname + '/index_projeto.html'));
+	response.sendFile(path.join(__dirname + '/pages/index_projeto.html'));
 });
 
 app.post('/projeto', function(request, response) {
 	//console.log("Entrou aqqqqq", request.body.nome)
-	
+
 	var nome = request.body.nome;
 	var email = request.body.email;
 	var uf = request.body.estado;
@@ -151,7 +151,7 @@ app.post('/projeto', function(request, response) {
     		pool.end();
   			}
 		);
-	response.sendFile(path.join(__dirname + '/index_projeto.html'));
+	response.sendFile(path.join(__dirname + '/pages/index_projeto.html'));
 
 	/*var mailOptions = {
 		from: 'calctarifas@gmail.com',
@@ -208,25 +208,27 @@ app.post('/login', function(request, response) {
 	//console.log(username, password);
 	if (username && password) {
 		pool.query('SELECT * FROM contas WHERE username = $1 AND password = $2', [username, password], function(error, results, fields) {
-			console.log(results);
+			//console.log(results.rows[0]['username']);
 
 			if (error) {
-				console.log(error.stack)
+				console.log("Entrouuu aquii", error.stack)
 				response.end();
 			} else {
-				//console.log('Entrou aqui', results.length);
-			if (results.rowCount > 0) {
-				request.session.loggedin = true;
-				request.session.username = username;
+				//console.log('Entrou aqui', results.rows[0]['username'], username);
+				if (results.rows[0]['username'] == username && results.rows[0]['password'] == password) {
+					request.session.loggedin = true;
+					request.session.username = username;
 
-                //console.log("Entrou aqui")
-				response.redirect('/home');
-			} else {
-				response.redirect('/login');
-				response.end();
-				//response.send('Incorrect Username and/or Password!');
-			}
-			response.end();
+					console.log("Entrou aqui")
+					response.redirect('/home');
+					//response.render(__dirname + '/home.html');
+				} else {
+					response.redirect('/login');
+					response.end();
+				//	response.send('Incorrect Username and/or Password!');
+				}
+			//response.redirect('/login');
+			//response.end();
 			}
 		});
 	} else {
@@ -236,18 +238,18 @@ app.post('/login', function(request, response) {
 });
 
 app.get('/home', function(request, response) {
-	pool.query('SELECT * FROM PROJETOS', function(error, results) {
-		
-		response.render(__dirname + '/home.html', {results: results, moment: moment});
+	//pool.query('SELECT * FROM PROJETOS', function(error, results) {
+
+		response.render(__dirname + '/pages/home.html');
 		//res.render(path.join(__dirname, '/public', 'homepage.html'));
-	});
+	//});
 
 });
 
 app.get('/cadastro', function(request, response) {
 	//pool.query('SELECT * FROM PROJETOS', function(error, results) {
-		
-	response.render(__dirname + '/cadastro-projeto.html');
+
+	response.render(__dirname + '/pages/cadastro-projeto.html');
 		//res.render(path.join(__dirname, '/public', 'homepage.html'));
 	//});
 
@@ -255,8 +257,8 @@ app.get('/cadastro', function(request, response) {
 
 app.post('/buscarDadosPorData', function(request, response) {
 
-	dataInicio = "'"+request.body['dataInicio']+"'";
-	dataFim = "'"+request.body['dataFim']+"'";
+	dataInicio = "'"+request.body['dataInicio'].split("/").reverse().join("-").replace(/\s+/g, '')+"'";
+	dataFim = "'"+ request.body['dataFim'].split("/").reverse().join("-").replace(/\s+/g, '')+"'";
 
 	data_cadastro = []
 	nome = []
@@ -267,10 +269,11 @@ app.post('/buscarDadosPorData', function(request, response) {
 	indicacaoprofessor = []
 	acoes = []
 
-	//sqlString = "SELECT * FROM PROJETOS WHERE TO_CHAR(DATA_CADASTRO, 'DD/MM/YYYY') > REPLACE("+dataInicio+", ' ', '') AND TO_CHAR(DATA_CADASTRO, 'DD/MM/YYYY') <= REPLACE("+dataFim+", ' ', '')"
-	sqlString = "SELECT * FROM projetos"
+	//console.log(dataInicio, dataFim)
+
+	sqlString = "SELECT * FROM PROJETOS WHERE TO_CHAR(DATA_CADASTRO, 'YYYY-MM-DD') > REPLACE("+dataInicio+", ' ', '') AND TO_CHAR(DATA_CADASTRO, 'YYYY-MM-DD') <= REPLACE("+dataFim+", ' ', '')"
+	//sqlString = "SELECT * FROM projetos"
 	pool.query(sqlString, function(error, results) {
-		//console.log(results);
 
 		if (error) {
 			console.log(error.stack)
@@ -278,33 +281,12 @@ app.post('/buscarDadosPorData', function(request, response) {
 			response.send(JSON.stringify(error.stack))
 		  } else {
 
-			//console.log(results.fields)
+			response.send(JSON.parse(JSON.stringify(results.rows)))
 
-			for (var i = 0; i < results.rowCount;  i++) {
-				console.log(results.fields[i])
-				//data_cadastro[i] = results.rows[i].data_cadastro
-				/*nome[i] = results.rows[i].nome
-				email[i] = results.rows[i].email
-				cidade[i] =  results.rows[i].cidade
-				nomeescola[i] = results.rows[i].nomeescola
-				telefone[i] = results.rows[i].telefone
-				indicacaoprofessor[i] = results.rows[i].indicacaoprofessor
-				acoes[i] = results.rows[i].acoes*/
-			}
-
-			//console.log(results.rowCount)
-			//console.log(dataInicio, dataFim)
-
-			resultados = {data_cadastro: data_cadastro}
-			console.log(resultados)
-
-			response.send(JSON.stringify(resultados))
-
-			//console.log("Data", sqlString, data_cadastro)
 		  }
 
 
-		
+
 	});
 
 	//console.log("Entrou aqui", sqlString)
@@ -312,7 +294,7 @@ app.post('/buscarDadosPorData', function(request, response) {
 });
 
 app.get('/sair', function(request, response) {
-	response.redirect('/');
+	response.redirect('/login');
 });
 
 app.listen(PORT, () => {
