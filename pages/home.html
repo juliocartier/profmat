@@ -1,111 +1,135 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-	<title>PROFMAT</title>
-	<meta charset="utf-8">
+    <title>PROFMAT</title>
+    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="/css/style.css">
-	<link rel="stylesheet" type="text/css" href="/css/datepicker.css">
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/css/datepicker.css">
     <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
-	<!-- <script type="text/javascript" src="/js/home.js"></script> -->
-	<!-- <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script> -->
-	<!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script> -->
+    <!-- <script type="text/javascript" src="/js/home.js"></script> -->
+    <!-- <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script> -->
+    <!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script> -->
 
-	<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
-	<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 
-	<script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
 
-	$.noConflict();
-	jQuery( document ).ready(function( $ ) {
-		console.log( "document loaded" );
+    <script>
+        $.noConflict();
+        jQuery(document).ready(function($) {
+            console.log("document loaded");
 
-		$(function() {
-			$('input[name="daterange"]').daterangepicker({
-				opens: 'left',
-				"locale": {
-				"format": "DD/MM/YYYY",
-				"separator": " - ",
-				"applyLabel": "Aplicar",
-				"cancelLabel": "Cancelar",
-				"daysOfWeek": [
-				"Dom",
-				"Seg",
-				"Ter",
-				"Qua",
-				"Qui",
-				"Sex",
-				"Sab"
-				],
-				"monthNames": [
-				"Janeiro",
-				"Fevereiro",
-				"Março",
-				"Abril",
-				"Maio",
-				"Junho",
-				"Julho",
-				"Agosto",
-				"Setembro",
-				"Outubro",
-				"Novembro",
-				"Dezembro"
-				],
-				"firstDay": 1
-			}
-			}, function(start, end, label) {
-				console.log("A new date selection was made: " + start.format('DD/MM/YYYY') + ' to ' + end.format('DD/MM/YYYY'));
-			});
-		});
+            $(function() {
+                $('input[name="daterange"]').daterangepicker({
+                    opens: 'left',
+                    "locale": {
+                        "format": "DD/MM/YYYY",
+                        "separator": " - ",
+                        "applyLabel": "Aplicar",
+                        "cancelLabel": "Cancelar",
+                        "daysOfWeek": [
+                            "Dom",
+                            "Seg",
+                            "Ter",
+                            "Qua",
+                            "Qui",
+                            "Sex",
+                            "Sab"
+                        ],
+                        "monthNames": [
+                            "Janeiro",
+                            "Fevereiro",
+                            "Março",
+                            "Abril",
+                            "Maio",
+                            "Junho",
+                            "Julho",
+                            "Agosto",
+                            "Setembro",
+                            "Outubro",
+                            "Novembro",
+                            "Dezembro"
+                        ],
+                        "firstDay": 1
+                    }
+                }, function(start, end, label) {
+                    console.log("A new date selection was made: " + start.format('DD/MM/YYYY') + ' to ' + end.format('DD/MM/YYYY'));
+                });
+            });
 
-		const d = new Date();
+            const d = new Date();
 
-		$("#dataBusca").val(d.getFullYear());
+            $("#dataBusca").val(d.getFullYear());
 
-		$("#buscar").click(function()  {
 
-			data = $("#dataBusca").val().split("-");
 
-			dataInicio = data[0];
-			dataFim = data[1];
+            $("#buscar").click(function() {
 
-			console.log("Testeeeee", dataInicio, dataFim);
+                data = $("#dataBusca").val().split("-");
 
-			$.ajax({
-				url: '/buscarDadosPorData',
-				type: 'POST',
-				cache: false,
-				data: { dataInicio: dataInicio, dataFim: dataFim },
-				success: function(data){
-					console.log(data);
+                dataInicio = data[0];
+                dataFim = data[1];
 
-					for (i = 0; i < data.length; i++) {
-						//console.log($("#data_cadastro").append(data["data_cadastro"]))
-						$("#data_cadastro").append(data["data_cadastro"])
-						$("#nome").append(data["nome"])
-						$("#email").append(data["email"])
-						$("#uf").append(data["uf"])
-						$("#cidade").append(data["cidade"])
-						$("#nomeescola").append(data["nomeescola"])
-						$("#telefone").append(data["telefone"])
-						$("#indicacaoprofessor").append(data["indicacaoprofessor"])
-						$("#acoes").append(data["acoes"])
-					}
+                console.log("Testeeeee", dataInicio, dataFim);
 
-				}
-				, error: function(jqXHR, textStatus, err){
-					alert('text status '+textStatus+', err '+err)
-				}
-			})
 
-		});
-		// Code that uses jQuery's $ can follow here.
-	});
-		/*$(document).ready(function () {
+                var trHTML = '';
+                //$('#records_table').val(trHTML);
+                $('#records_table tbody').empty();
+
+                $.ajax({
+                    url: '/buscarDadosPorData',
+                    type: 'POST',
+                    cache: false,
+                    data: {
+                        dataInicio: dataInicio,
+                        dataFim: dataFim
+                    },
+                    success: function(data) {
+                        console.log(data);
+
+                        for (i = 0; i < data.length; i++) {
+
+                            trHTML += '<tr class="text-white"><td>' + data[i]["data_cadastro"] + '</td><td>' + data[i]["nome"] + '</td><td>' + data[i]["email"] + '</td><td>' + data[i]["uf"] + '</td><td>' + data[i]["cidade"] + '</td><td>' + data[i]["nomeescola"] + '</td><td>' + data[i]["telefone"] + '</td><td>' + data[i]["indicacaoprofessor"] + '</td><td>' + data[i]["acoes"] + '</td></tr>';
+                            //console.log($("#data_cadastro").append(data["data_cadastro"]))
+                            /*
+							<th scope="col">Nome da Escola</th>
+                            <th scope="col">Telefone</th>
+                            <th scope="col">Indicação</th>
+                            <th scope="col">Ações</th>
+							$("#data_cadastro").append(data["data_cadastro"])
+							$("#nome").append(data["nome"])
+							$("#email").append(data["email"])
+							$("#uf").append(data["uf"])
+							$("#cidade").append(data["cidade"])
+							$("#nomeescola").append(data["nomeescola"])
+							$("#telefone").append(data["telefone"])
+							$("#indicacaoprofessor").append(data["indicacaoprofessor"])
+							$("#acoes").append(data["acoes"])*/
+                        }
+
+                        console.log(trHTML)
+
+                        $('#records_table').append(trHTML);
+
+                    },
+                    error: function(jqXHR, textStatus, err) {
+                        console.log('text status ' + textStatus + ', err ' + err)
+                    }
+                })
+
+            });
+            // Code that uses jQuery's $ can follow here.
+        });
+        /*$(document).ready(function () {
     		console.log( "document loaded" );
 
 			//	$(function() {
@@ -129,73 +153,74 @@
 				console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
 			});
 		});*/
-
-	</script>
+    </script>
 </head>
+
 <body>
 
-<div class="container-fluid">
-	<nav class="navbar navbar-expand-lg navbar-light nav-color navbar-fixed-top pt-4">
-	  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <div class="container-fluid">
+        <nav class="navbar navbar-expand-lg navbar-light nav-color navbar-fixed-top pt-4">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 	    <!--<span class="navbar-toggler-icon text-white"></span>-->
       <img src="img/menu.png" class="img-responsive" alt="menu" width="30" height="30">
 	  </button>
 
-	  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-	    <ul class="navbar-nav mr-auto">
-	      <li class="nav-item active">
-	        <a class="nav-link text-white" href="home">Home</a>
-	      </li>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent" style="padding-left: 10px;">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link text-white" href="home">Home</a>
+                    </li>
 
-		  <li class="nav-item active">
-	        <a class="nav-link text-white" href="cadastro">Cadastro</a>
-	      </li>
-	  	</ul>
-	  	<ul class="navbar-nav ml-auto">
-	      <li class="nav-item">
-	        <a class="nav-link text-white" href="sair">Sair</a>
-	      </li>
-	    </ul>
+                    <li class="nav-item active">
+                        <a class="nav-link text-white" href="cadastro">Cadastro</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="sair">Sair</a>
+                    </li>
+                </ul>
 
-	  </div>
-	</nav>
-</div>
-
-
-<div class="login">
-	<div class="container mt-4">
-		<div class="row">
-			<div class="col-sm-12 mt-5 text-center text-white">
-				<h3>Inscrições dos Projetos</h3>
-			</div>
-		</div>
+            </div>
+        </nav>
+    </div>
 
 
-		<div class="row">
-			<div class='col-sm-6'>
-				<input type="text" name="daterange" id="dataBusca" />
-			 </div>
-			 <div class="col-sm-6">
-				<button type="submit" class="btn btn-primary" id="buscar">Buscar</button>
-			 </div>
-		</div>
+    <div class="login">
+        <div class="container mt-4">
+            <div class="row">
+                <div class="col-sm-12 mt-5 text-center text-white">
+                    <h3>Inscrições dos Projetos</h3>
+                </div>
+            </div>
 
-	<div class="table-responsive-sm">
-		<table class="table">
-			<thead>
-			  <tr class="text-white">
-				<th scope="col">Data Cadastro</th>
-				<th scope="col">Nome</th>
-				<th scope="col">Email</th>
-				<th scope="col">Cidade</th>
-				<th scope="col">Nome da Escola</th>
-				<th scope="col">Telefone</th>
-				<th scope="col">Indicação</th>
-				<th scope="col">Ações</th>
-			  </tr>
-			</thead>
-			<tbody>
-				 <!--<tr class="text-white">
+
+            <div class="row">
+                <div class='col-sm-6'>
+                    <input type="text" name="daterange" id="dataBusca" />
+                </div>
+                <div class="col-sm-6">
+                    <button type="submit" class="btn btn-primary" id="buscar">Buscar</button>
+                </div>
+            </div>
+
+            <div class="table-responsive-sm">
+                <table id="records_table" class="table">
+                    <thead>
+                        <tr class="text-white">
+                            <th scope="col">Data Cadastro</th>
+                            <th scope="col">Nome</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">UF</th>
+                            <th scope="col">Cidade</th>
+                            <th scope="col">Nome da Escola</th>
+                            <th scope="col">Telefone</th>
+                            <th scope="col">Indicação</th>
+                            <th scope="col">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!--<tr class="text-white">
 					  <td id="data_cadastro"></td>
 					  <td id="nome"></td>
 					  <td id="email"></td>
@@ -207,7 +232,7 @@
 					  <td id="acoes"></td>
 					</tr> -->
 
-				<!--<tr class="text-white">
+                        <!--<tr class="text-white">
 					  <td id="data_cadastro"></td>
 					  <td id="nome"></td>
 					  <td id="email"></td>
@@ -217,10 +242,10 @@
 					  <td id="indicacaoprofessor"></td>
 					  <td id="acoes"></td>
 					</tr>-->
-			</tbody>
-		  </table>
-	</div>
-		<!--<div class="row">
+                    </tbody>
+                </table>
+            </div>
+            <!--<div class="row">
            <div class="col-md-8 mx-auto mt-5 text-center">
 	           <form action="login" method="POST">
 				  <div class="form-group">
@@ -236,41 +261,43 @@
            </div>
        </div>-->
 
-	</div>
-</div>
+        </div>
+    </div>
 
-<div class="container-fluid color-footer">
-	<footer class="page-footer font-small pt-5">
-      <div class="row">
-      	<div class="col-md-12 mx-auto text-center mp-2">
-      		<p>
-      			 (84)3317-8313 ou secpos@ufersa.edu.br
-      		</p>
+    <div class="container-fluid color-footer">
+        <footer class="page-footer font-small pt-5">
+            <div class="row">
+                <div class="col-md-12 mx-auto text-center mp-2">
+                    <p>
+                        (84)3317-8313 ou secpos@ufersa.edu.br
+                    </p>
 
-      	</div>
-      </div>
+                </div>
+            </div>
 
 
-      <div class="row">
-      	<div class="col-sm-12 mx-auto">
-		  	<div class="footer-copyright text-center py-3">
-		  		<p><div id="dataAno"> </p>
-		  	</div>
-		 </div>
-	  </div>
-	</footer>
-</div>
+            <div class="row">
+                <div class="col-sm-12 mx-auto">
+                    <div class="footer-copyright text-center py-3">
+                        <p>
+                            <div id="dataAno">
+                        </p>
+                        </div>
+                    </div>
+                </div>
+        </footer>
+        </div>
 
-<script src="/js/bootstrap-datepicker.js"></script>
-<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
+        <script src="/js/bootstrap-datepicker.js"></script>
+        <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> -->
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
 
-	<script>
-		var data = new Date();
-		var ano = data.getFullYear();
-		document.getElementById("dataAno").innerHTML = "Julio Cartier M. Gomes " + ano + ".";
-
-	</script>
+        <script>
+            var data = new Date();
+            var ano = data.getFullYear();
+            document.getElementById("dataAno").innerHTML = "Julio Cartier M. Gomes " + ano + ".";
+        </script>
 </body>
+
 </html>

@@ -1,154 +1,168 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-	<title>PROFMAT</title>
-	<meta charset="utf-8">
+    <title>PROFMAT</title>
+    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
-	<link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
 
     <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
-	<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-	<script type="text/javascript" src="js/jquery.mask.js"></script>
-	<script type="text/javascript" src="js/jquery.mask.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="js/jquery.mask.js"></script>
+    <script type="text/javascript" src="js/jquery.mask.min.js"></script>
 
-	<script>
-		jQuery( document ).ready(function( $ ) {
+    <script>
+        jQuery(document).ready(function($) {
 
-			$('#estado').each(function(){
-					$.ajax({
-					url: 'https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome',
-					type: 'GET',
-					cache: false,
-					//data: { dataInicio: dataInicio, dataFim: dataFim },
-					success: function(result){
-						//console.log(result);
+            $('#estado').each(function() {
+                $.ajax({
+                    url: 'https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome',
+                    type: 'GET',
+                    cache: false,
+                    //data: { dataInicio: dataInicio, dataFim: dataFim },
+                    success: function(result) {
+                        //console.log(result);
 
-						for(i = 0; i < result.length; i++){
-							$("#estado").append($("<option value=" + result[i]['sigla'] + " >"+result[i]['sigla']+ " - " + result[i]['nome']+"</option>"))
-						}
-
-
-					}
-					, error: function(jqXHR, textStatus, err){
-						console.log('text status '+textStatus+', err '+ err)
-					}
-				})
-			});
-
-			$('#estado').change(function(){
-
-				valorEstado = $('#estado').val();
-				//$("#municipios").val();
-
-				$.ajax({
-					url: 'https://servicodados.ibge.gov.br/api/v1/localidades/estados/'+ valorEstado +'/municipios',
-					type: 'GET',
-					cache: false,
-					success: function(result){
-						//console.log("Entrou aqui 2", result);
-
-						for(i = 0; i < result.length; i++){
-							$("#municipios").append($("<option value=" + result[i]['id'] + " >"+result[i]['nome']+"</option>"))
-						}
-					}
-					, error: function(jqXHR, textStatus, err){
-						console.log('text status '+textStatus+', err '+ err)
-					}
-				})
-			});
-
-			$('#municipios').change(function(){
-
-				valorEstado = $('#estado').val();
-				valorMunicipio = $('#municipios').val();
-				console.log(valorEstado, valorMunicipio)
-				//$("#municipios").val();
-
-				dados = {estado: "RN", cidade: 2408102}
-
-				 var sendingData = {
-										estado: "RN",
-									    cidade: 2408102
-									}
-
-				$.ajax({
-					//url: 'http://educacao.dadosabertosbr.com/api/escolas/buscaavancada?estado='+valorEstado+'&cidade='+valorMunicipio,
-					//url: 'http://educacao.dadosabertosbr.com/api/escolas/buscaavancada',
-					url: 'http://educacao.dadosabertosbr.com/api/escolas/buscaavancada?estado=RN&cidade=2408102',
-					contentType: 'application/json',
-					cache: false,
-					method: 'GET',
-					//crossDomain: true,
-   					dataType: 'jsonp',
-					data: sendingData,
-					success: function(result){
-						console.log("Entrou aqui 23", result);
-
-						/*for(i = 0; i < result.length; i++){
-							$("#nomeEscola").append($("<option value=" + result[i]['nome'] + " >"+result[i]['nome']+"</option>"))
-						}*/
-					}
-					, error: function(jqXHR, textStatus, err){
-						console.log('text status '+textStatus+', err '+ err)
-					}
-				})
-			});
+                        for (i = 0; i < result.length; i++) {
+                            $("#estado").append($("<option value=" + result[i]['sigla'] + " >" + result[i]['sigla'] + " - " + result[i]['nome'] + "</option>"))
+                        }
 
 
-			$('#telefone').mask('(00) 00000-0000');
+                    },
+                    error: function(jqXHR, textStatus, err) {
+                        console.log('text status ' + textStatus + ', err ' + err)
+                    }
+                })
+            });
 
-			$('#btnEnviar').click(function(){
+            $('#estado').change(function() {
 
-				nome = $("#nome").val()
-				email = $("#email").val()
-				estado = $("#estado").val()
-				municipios = $("#municipios").val()
-				nomeEscola = $("#nomeEscola").val()
-				telefone = $("#telefone").val()
-				indicacao = $("#indicacao").val()
-				messagem = $("#messagem").val()
+                valorEstado = $('#estado').val();
+                //$("#municipios").val();
+                $('#municipios').empty();
+                $.ajax({
+                    url: 'https://servicodados.ibge.gov.br/api/v1/localidades/estados/' + valorEstado + '/municipios',
+                    type: 'GET',
+                    cache: false,
+                    success: function(result) {
+                        //console.log("Entrou aqui 2", result);
 
-				dados = { nome, email, estado, municipios, nomeEscola, telefone, indicacao, messagem  }
+                        for (i = 0; i < result.length; i++) {
+                            $("#municipios").append($("<option value=" + result[i]['nome'] + " >" + result[i]['nome'] + "</option>"))
+                        }
+                    },
+                    error: function(jqXHR, textStatus, err) {
+                        console.log('text status ' + textStatus + ', err ' + err)
+                    }
+                })
+            });
 
-				console.log(dados);
+            $('#municipios').change(function() {
 
-				$.ajax({
-					url: '/projeto',
-					type: 'POST',
-					cache: false,
-					data: dados,
-					success: function(result){
-						console.log("Entrou aqui 2", result);
+                valorEstado = $('#estado').val();
+                valorMunicipio = $('#municipios').val();
+                console.log(valorEstado, valorMunicipio)
+                    //$("#municipios").val();
 
-					}
-					, error: function(jqXHR, textStatus, err){
-						console.log('text status '+textStatus+', err '+ err)
-					}
-				})
-			})
+                dados = {
+                    estado: "RN",
+                    cidade: 2408102
+                }
 
-		})
-	</script>
+                var sendingData = {
+                    estado: "RN",
+                    cidade: 2408102
+                }
+
+                $.ajax({
+                    //url: 'http://educacao.dadosabertosbr.com/api/escolas/buscaavancada?estado='+valorEstado+'&cidade='+valorMunicipio,
+                    //url: 'http://educacao.dadosabertosbr.com/api/escolas/buscaavancada',
+                    url: 'http://educacao.dadosabertosbr.com/api/escolas/buscaavancada?estado=RN&cidade=2408102',
+                    contentType: 'application/json',
+                    cache: false,
+                    method: 'GET',
+                    //crossDomain: true,
+                    dataType: 'jsonp',
+                    data: sendingData,
+                    success: function(result) {
+                        console.log("Entrou aqui 23", result);
+
+                        /*for(i = 0; i < result.length; i++){
+                        	$("#nomeEscola").append($("<option value=" + result[i]['nome'] + " >"+result[i]['nome']+"</option>"))
+                        }*/
+                    },
+                    error: function(jqXHR, textStatus, err) {
+                        console.log('text status ' + textStatus + ', err ' + err)
+                    }
+                })
+            });
+
+
+            $('#telefone').mask('(00) 00000-0000');
+
+            $('#btnEnviar').click(function() {
+
+                nome = $("#nome").val()
+                email = $("#email").val()
+                estado = $("#estado").val()
+                municipios = $("#municipios").val()
+                nomeEscola = $("#nomeEscola").val()
+                telefone = $("#telefone").val()
+                indicacao = $("#indicacao").val()
+                messagem = $("#messagem").val()
+
+                dados = {
+                    nome,
+                    email,
+                    estado,
+                    municipios,
+                    nomeEscola,
+                    telefone,
+                    indicacao,
+                    messagem
+                }
+
+                console.log(dados);
+
+                $.ajax({
+                    url: '/projeto',
+                    type: 'POST',
+                    cache: false,
+                    data: dados,
+                    success: function(result) {
+                        console.log("Entrou aqui 2", result);
+
+                    },
+                    error: function(jqXHR, textStatus, err) {
+                        console.log('text status ' + textStatus + ', err ' + err)
+                    }
+                })
+            })
+
+        })
+    </script>
 </head>
+
 <body>
 
-<div class="container-fluid">
-	<nav class="navbar navbar-expand-lg navbar-light nav-color navbar-fixed-top pt-4">
-	  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <div class="container-fluid">
+        <nav class="navbar navbar-expand-lg navbar-light nav-color navbar-fixed-top pt-4">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 	    <!--<span class="navbar-toggler-icon text-white"></span>-->
       <img src="img/menu.png" class="img-responsive" alt="menu" width="30" height="30">
 	  </button>
 
-	  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-	    <ul class="navbar-nav mr-auto">
-	      <li class="nav-item active">
-	        <a class="nav-link text-white" href="/">Home <span class="sr-only">(current)</span></a>
-	      </li>
-	  	</ul>
-	  	<!-- <ul class="navbar-nav ml-auto">
+            <div class="collapse navbar-collapse" id="navbarSupportedContent" style="padding-left: 10px;">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link text-white" href="/">Home <span class="sr-only">(current)</span></a>
+                    </li>
+                </ul>
+                <!-- <ul class="navbar-nav ml-auto">
 	      <li class="nav-item">
 	        <a class="nav-link text-white" href="login">Login</a>
 	      </li>
@@ -157,467 +171,423 @@
 			http://educacao.dadosabertosbr.com/api/escolas/buscaavancada?estado=RN&cidade=2408102
 		-->
 
-	  </div>
-	</nav>
-</div>
+            </div>
+        </nav>
+    </div>
 
-<div class="login">
-	<div class="container mt-4">
-		<div class="row">
-			<div class="col-sm-12 mt-5 text-center text-white">
-				<h3>Projetos em Andamento</h3>
-			</div>
-		</div>
+    <div class="login">
+        <div class="container mt-4">
+            <div class="row">
+                <div class="col-sm-12 mt-5 text-center text-white">
+                    <h3>Projetos em Andamento</h3>
+                </div>
+            </div>
 
-		<div id="accordion">
+            <div id="accordion">
 
-			<div class="row">
-				<div class="col-md-4 mx-auto mt-3 text-center d-flex align-items-stretch">
-					<div class="card">
-						<img class="img-fluid" src="img/img1.jpg" alt="Card image cap">
-						<div class="card-body">
-						  <h5 class="card-title text-white">PROFMAT nas Escolas</h5>
-						  <p class="card-text text-white">O projeto visa compartilhar com a rede de ensino local, principalmente com a rede pública, ações de ensino.</p>
-						</div>
-						<div class="card-body">
-							<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                <div class="row">
+                    <div class="col-md-4 mx-auto mt-3 text-center d-flex align-items-stretch">
+                        <div class="card">
+                            <img class="img-fluid" src="img/img1.jpg" alt="Card image cap">
+                            <div class="card-body">
+                                <h5 class="card-title text-white">PROFMAT nas Escolas</h5>
+                                <p class="card-text text-white">O projeto visa compartilhar com a rede de ensino local, principalmente com a rede pública, ações de ensino.</p>
+                            </div>
+                            <div class="card-body">
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
 								Leia Mais
 							  </button>
-						  <!-- <a href="#" class="card-link">Leia Mais</a> -->
-					    </div>
+                                <!-- <a href="#" class="card-link">Leia Mais</a> -->
+                            </div>
+                        </div>
                     </div>
-				</div>
 
-				<div class="col-md-4 mx-auto mt-3 text-center d-flex align-items-stretch">
-					<div class="card">
-						<img class="card-img-top img-fluid" src="img/img2.jpg" alt="Card image cap">
-						<div class="card-body">
-						  <h5 class="card-title text-white">Pesquisa sobre a evação no ensino à distância da UFERSA</h5>
-						  <p class="card-text text-white">Esta pesquisa busca conhecer os principais elemento relacionados à evasão no Ensino à dos cursos distância da UFERSA.</p>
-						</div>
-						<div class="card-body">
-							<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#projeto2">
+                    <div class="col-md-4 mx-auto mt-3 text-center d-flex align-items-stretch">
+                        <div class="card">
+                            <img class="card-img-top img-fluid" src="img/img2.jpg" alt="Card image cap">
+                            <div class="card-body">
+                                <h5 class="card-title text-white">Pesquisa sobre a evação no ensino à distância da UFERSA</h5>
+                                <p class="card-text text-white">Esta pesquisa busca conhecer os principais elemento relacionados à evasão no Ensino à dos cursos distância da UFERSA.</p>
+                            </div>
+                            <div class="card-body">
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#projeto2">
 								Leia Mais
 							  </button>
-						  <!-- <a href="#" class="card-link">Leia Mais</a> -->
-					    </div>
+                                <!-- <a href="#" class="card-link">Leia Mais</a> -->
+                            </div>
+                        </div>
                     </div>
-				</div>
 
-				<div class="col-md-4 mx-auto mt-3 text-center d-flex align-items-stretch">
-					<div class="card">
-						<img class="card-img-top img-fluid" src="img/img3.jpg" alt="Card image cap">
-						<div class="card-body">
-						  <h5 class="card-title text-white">Programa de Aperfeiçoamento de Professores de Matemática</h5>
-						  <p class="card-text text-white">Trata-se de um Programa de apio ao auto deesnvolvimento em Matemática - tem o intuito de colaborar com os(as) estudantes de graduação da UFERSA.</p>
-						</div>
-						<div class="card-body">
-							<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#projeto3">
+                    <div class="col-md-4 mx-auto mt-3 text-center d-flex align-items-stretch">
+                        <div class="card">
+                            <img class="card-img-top img-fluid" src="img/img3.jpg" alt="Card image cap">
+                            <div class="card-body">
+                                <h5 class="card-title text-white">Programa de Aperfeiçoamento de Professores de Matemática</h5>
+                                <p class="card-text text-white">Trata-se de um Programa de apio ao auto deesnvolvimento em Matemática - tem o intuito de colaborar com os(as) estudantes de graduação da UFERSA.</p>
+                            </div>
+                            <div class="card-body">
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#projeto3">
 								Leia Mais
 							  </button>
-						  <!-- <a href="#" class="card-link">Leia Mais</a> -->
-					    </div>
+                                <!-- <a href="#" class="card-link">Leia Mais</a> -->
+                            </div>
+                        </div>
                     </div>
-				</div>
 
-			</div>
+                </div>
 
-		</div>
-	</div>
-</div>
+            </div>
+        </div>
+    </div>
 
-<div class="login">
-	<div class="container mt-4">
-		<div class="row">
-			<div class="col-sm-12 mt-5 text-center text-white">
-				<h3>Projetos Finalizados</h3>
-			</div>
-		</div>
+    <div class="login">
+        <div class="container mt-4">
+            <div class="row">
+                <div class="col-sm-12 mt-5 text-center text-white">
+                    <h3>Projetos Finalizados</h3>
+                </div>
+            </div>
 
-		<div id="accordion">
+            <div id="accordion">
 
-			<div class="row">
-				<div class="col-md-4 mx-auto mt-3 text-center d-flex align-items-stretch">
-					<div class="card">
-						<img class="card-img-top" src="img/img4.jpg" alt="Card image cap">
-						<div class="card-body">
-						  <h5 class="card-title text-white">Modelagem matemática em três dimensões</h5>
-						  <p class="card-text text-white">O presente trabalho tem como objetivo simular um holograma e mostrar como funciona. Um holograma é como uma fotografia tridimensional.</p>
-						</div>
-						<div class="card-body">
-							<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#projeto4">
+                <div class="row">
+                    <div class="col-md-4 mx-auto mt-3 text-center d-flex align-items-stretch">
+                        <div class="card">
+                            <img class="card-img-top" src="img/img4.jpg" alt="Card image cap">
+                            <div class="card-body">
+                                <h5 class="card-title text-white">Modelagem matemática em três dimensões</h5>
+                                <p class="card-text text-white">O presente trabalho tem como objetivo simular um holograma e mostrar como funciona. Um holograma é como uma fotografia tridimensional.</p>
+                            </div>
+                            <div class="card-body">
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#projeto4">
 								Leia Mais
 							  </button>
-						  <!-- <a href="#" class="card-link">Leia Mais</a> -->
-					    </div>
+                                <!-- <a href="#" class="card-link">Leia Mais</a> -->
+                            </div>
+                        </div>
                     </div>
-				</div>
 
-				<div class="col-md-4 mx-auto mt-3 text-center d-flex align-items-stretch">
-					<div class="card">
-						<img class="card-img-top" src="img/img5.jpg" alt="Card image cap">
-						<div class="card-body">
-						  <h5 class="card-title text-white">Codificações Orientadas para o Desenvolvimento Eletrônico - CODE</h5>
-						  <p class="card-text text-white">É um projeto de pesquisa criado para desenvolver modelagens de sistemas de controle.</p>
-						</div>
-						<div class="card-body">
-							<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#projeto5">
+                    <div class="col-md-4 mx-auto mt-3 text-center d-flex align-items-stretch">
+                        <div class="card">
+                            <img class="card-img-top" src="img/img5.jpg" alt="Card image cap">
+                            <div class="card-body">
+                                <h5 class="card-title text-white">Codificações Orientadas para o Desenvolvimento Eletrônico - CODE</h5>
+                                <p class="card-text text-white">É um projeto de pesquisa criado para desenvolver modelagens de sistemas de controle.</p>
+                            </div>
+                            <div class="card-body">
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#projeto5">
 								Leia Mais
 							  </button>
-						  <!-- <a href="#" class="card-link">Leia Mais</a> -->
-					    </div>
+                                <!-- <a href="#" class="card-link">Leia Mais</a> -->
+                            </div>
+                        </div>
                     </div>
-				</div>
 
-				<div class="col-md-4 mx-auto mt-3 text-center d-flex align-items-stretch">
-					<div class="card">
-						<img class="card-img-top" src="img/img6.jpg" alt="Card image cap">
-						<div class="card-body">
-						  <h5 class="card-title text-white">Estudos da equação de Richards com uso do Geogebra</h5>
-						  <p class="card-text text-white">O projeto visa trabalhar os conceitos de análise algébrico na solução de sistemas lineares com aplicações na teoria de controles e física matemática.</p>
-						</div>
-						<div class="card-body">
-							<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#projeto6">
+                    <div class="col-md-4 mx-auto mt-3 text-center d-flex align-items-stretch">
+                        <div class="card">
+                            <img class="card-img-top" src="img/img6.jpg" alt="Card image cap">
+                            <div class="card-body">
+                                <h5 class="card-title text-white">Estudos da equação de Richards com uso do Geogebra</h5>
+                                <p class="card-text text-white">O projeto visa trabalhar os conceitos de análise algébrico na solução de sistemas lineares com aplicações na teoria de controles e física matemática.</p>
+                            </div>
+                            <div class="card-body">
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#projeto6">
 								Leia Mais
 							  </button>
-						  <!-- <a href="#" class="card-link">Leia Mais</a> -->
-					    </div>
+                                <!-- <a href="#" class="card-link">Leia Mais</a> -->
+                            </div>
+                        </div>
                     </div>
-				</div>
 
-			</div>
+                </div>
 
-		</div>
-	</div>
-</div>
+            </div>
+        </div>
+    </div>
 
-<div class="login">
-	<div class="container mt-4">
-		<div class="row">
-			<div class="col-sm-12 mt-5 text-center text-white">
-				<h3>Projetos em Breve</h3>
-			</div>
-		</div>
+    <div class="login">
+        <div class="container mt-4">
+            <div class="row">
+                <div class="col-sm-12 mt-5 text-center text-white">
+                    <h3>Projetos em Breve</h3>
+                </div>
+            </div>
 
-		<div id="accordion">
+            <div id="accordion">
 
-			<div class="row">
-				<div class="col-md-4 mx-auto mt-3 text-center d-flex align-items-stretch">
-					<div class="card">
-						<img class="card-img-top" src="img/math-analisy.jpg" alt="Card image cap">
-						<div class="card-body">
-						  <h5 class="card-title text-white">Métodos Diagramáticos em Representação de Álgebras</h5>
-						  <p class="card-text text-white">Trataremos de um estudo de Representações de Álgebras por métodos diagramáticos no estudo de anéis artinianos.</p>
-						</div>
-						<div class="card-body">
-							<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#projeto7">
+                <div class="row">
+                    <div class="col-md-4 mx-auto mt-3 text-center d-flex align-items-stretch">
+                        <div class="card">
+                            <img class="card-img-top" src="img/math-analisy.jpg" alt="Card image cap">
+                            <div class="card-body">
+                                <h5 class="card-title text-white">Métodos Diagramáticos em Representação de Álgebras</h5>
+                                <p class="card-text text-white">Trataremos de um estudo de Representações de Álgebras por métodos diagramáticos no estudo de anéis artinianos.</p>
+                            </div>
+                            <div class="card-body">
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#projeto7">
 								Leia Mais
 							  </button>
-						  <!-- <a href="#" class="card-link">Leia Mais</a> -->
-					    </div>
+                                <!-- <a href="#" class="card-link">Leia Mais</a> -->
+                            </div>
+                        </div>
                     </div>
-				</div>
 
-			</div>
+                </div>
 
-		</div>
-	</div>
-</div>
-
+            </div>
+        </div>
+    </div>
 
 
 
-  <!-- Modal -->
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
-	  <div class="modal-content">
-		<div class="modal-header">
-		  <h5 class="modal-title" id="exampleModalLabel">PROFMAT nas Escolas</h5>
-		  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-		</div>
-		<div class="modal-body">
-			<div class="row">
-				<div class="col-md-8 mx-auto mt-5 text-center">
-					<p>
-					O projeto visa compartilhar com a rede de ensino local,
-					principalmente com a rede pública, ações de ensino que
-					foram criadas no programa de mestrado profissional em Matemática
-					ao longo dos seus 10 anos de vigência na UFERSA. São experiências
-					e propostas relatadas em monografias de TCC, discutidas em seminários
-					e encontros científicos que foram realizados no período de 2011 a até
-					o presente momento. Ações desenvolvidas por estudantes ativos e egressos,
-					professores e colaboradores do programa. Entendemos que muitas propostas
-					interessantes que podem melhorar a qualidade de ensino, foram pensadas e
-					apresentadas no Profmat. Entretanto, é necessário reduzir essa distância
-					entre a UFERSA e as escolas da região. Destacamos que as atividades do projeto
-					serão realizada de forma remota, explorando elementos do ensino à distância,
-					em particular a plaforma google-meet.</p>
 
-					<p>
-					 Dados da Prova Brasil de 2019 mostram que em nossa região conta com grandes
-					 problemas no tocante à educação de qualidade. Destacamos que nas escolas
-					 municipais de Mossoró apenas 24% dos alunos aprenderam o adequado na competência
-					 do conteúdo de Matemática 5º ano na rede municipal de ensino. E apenas 10% dos
-					 alunos que aprenderam o adequado na competência de resolução de problemas até o
-					 9º ano na rede municipal de ensino. A rede estadual tem desempenho bastante fraco,
-					 de acordo com os dados da Prova Brasil 2019 do INEP, temos que 3% é a proporção de
-					 alunos que aprenderam o adequado na competência de resolução de problemas até
-					 o 3º ano na rede estadual de ensino. Por outro lado, o mestrado profissional
-					 em Matemática da UFERSA tem mais de 100 monografias defendidas, trabalhos que
-					 tratam de questões voltadas para qualidade de ensino, de modo geral. Entendemos
-					 que é importante uma maior proximidade da UFERSA com as escolas da região no
-					 sentido de compartilhar soluções para enfrentar essa grande dificuldade supra
-					 citada. Vale destacar que questão da pandemia tende a agravar esse tipo de problema
-					 relacionado com a aprendizagem significativa, nesse sentido o projeto busta contribuir
-					 coma a minimização do problema. </p>
-				</div>
-			</div>
-		</div>
-	  </div>
-	</div>
-  </div>
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">PROFMAT nas Escolas</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-8 mx-auto mt-5 text-center">
+                            <p>
+                                O projeto visa compartilhar com a rede de ensino local, principalmente com a rede pública, ações de ensino que foram criadas no programa de mestrado profissional em Matemática ao longo dos seus 10 anos de vigência na UFERSA. São experiências e propostas
+                                relatadas em monografias de TCC, discutidas em seminários e encontros científicos que foram realizados no período de 2011 a até o presente momento. Ações desenvolvidas por estudantes ativos e egressos, professores e colaboradores
+                                do programa. Entendemos que muitas propostas interessantes que podem melhorar a qualidade de ensino, foram pensadas e apresentadas no Profmat. Entretanto, é necessário reduzir essa distância entre a UFERSA e as escolas
+                                da região. Destacamos que as atividades do projeto serão realizada de forma remota, explorando elementos do ensino à distância, em particular a plaforma google-meet.</p>
 
-  <div class="modal fade" id="projeto2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
-	  <div class="modal-content">
-		<div class="modal-header">
-		  <h5 class="modal-title" id="exampleModalLabel">Pesquisa sobre a evação no ensino à distância da UFERSA</h5>
-		  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-		</div>
-		<div class="modal-body">
-			<div class="row">
-				<div class="col-md-8 mx-auto mt-5 text-center">
-					<p>Resumo</p>
-					Esta pesquisa busca conhecer os principais elemento relacionados à evasão no Ensino
-					à dos cursos distância da UFERSA, sob uma perspectiva que vai além do estudo dos índices.
-					Objetiva um maior conhecimento das causas de evasão dos alunos matriculados nos cursos de EaD.
-					A pesquisa configura-se como um estudo de caso de caráter qualitativo. Os instrumentos de coleta
-					de dados serão os relatórios dos cursos, os documentos que apontam a desistência e
-				    entrevistas/questionários retratando o ponto de vista do aluno evadido.
-				</div>
-			</div>
-		</div>
-	  </div>
-	</div>
-  </div>
+                            <p>
+                                Dados da Prova Brasil de 2019 mostram que em nossa região conta com grandes problemas no tocante à educação de qualidade. Destacamos que nas escolas municipais de Mossoró apenas 24% dos alunos aprenderam o adequado na competência do conteúdo de Matemática
+                                5º ano na rede municipal de ensino. E apenas 10% dos alunos que aprenderam o adequado na competência de resolução de problemas até o 9º ano na rede municipal de ensino. A rede estadual tem desempenho bastante fraco, de
+                                acordo com os dados da Prova Brasil 2019 do INEP, temos que 3% é a proporção de alunos que aprenderam o adequado na competência de resolução de problemas até o 3º ano na rede estadual de ensino. Por outro lado, o mestrado
+                                profissional em Matemática da UFERSA tem mais de 100 monografias defendidas, trabalhos que tratam de questões voltadas para qualidade de ensino, de modo geral. Entendemos que é importante uma maior proximidade da UFERSA
+                                com as escolas da região no sentido de compartilhar soluções para enfrentar essa grande dificuldade supra citada. Vale destacar que questão da pandemia tende a agravar esse tipo de problema relacionado com a aprendizagem
+                                significativa, nesse sentido o projeto busta contribuir coma a minimização do problema. </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-  <div class="modal fade" id="projeto3" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
-	  <div class="modal-content">
-		<div class="modal-header">
-		  <h5 class="modal-title" id="exampleModalLabel">Programa de Aperfeiçoamento de Professores de Matemática</h5>
-		  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-		</div>
-		<div class="modal-body">
-			<div class="row">
-				<div class="col-md-8 mx-auto mt-5 text-center">
-					<p>Resumo</p>
-					  Trata-se de um Programa de apio ao auto deesnvolvimento em Matemática - tem o intuito de colaborar
-					  com os(as) estudantes de graduação da UFERSA que precisam tratar de dificuldades especificas em bases
-					  de conhecimento de matematica. É um curso semi-presencial no formato de modulos, onde o(a) próprio(a)
-					  estudante organiza seus horários de estudos e escolhe os móudlos de aprendizagem. O curso conta com a
-					  plataforma de ensino à distância Moodle , onde o estudante tem a disposição vídeo-aulas selecionadas
-					  para cada contéudo e a avaliação com um questionário online.
-				</div>
-			</div>
-		</div>
-	  </div>
-	</div>
-  </div>
+    <div class="modal fade" id="projeto2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Pesquisa sobre a evação no ensino à distância da UFERSA</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-8 mx-auto mt-5 text-center">
+                            <p>Resumo</p>
+                            Esta pesquisa busca conhecer os principais elemento relacionados à evasão no Ensino à dos cursos distância da UFERSA, sob uma perspectiva que vai além do estudo dos índices. Objetiva um maior conhecimento das causas de evasão dos alunos matriculados nos
+                            cursos de EaD. A pesquisa configura-se como um estudo de caso de caráter qualitativo. Os instrumentos de coleta de dados serão os relatórios dos cursos, os documentos que apontam a desistência e entrevistas/questionários retratando
+                            o ponto de vista do aluno evadido.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-  <div class="modal fade" id="projeto4" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
-	  <div class="modal-content">
-		<div class="modal-header">
-		  <h5 class="modal-title" id="exampleModalLabel">Modelagem matemática em três dimensões</h5>
-		  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-		</div>
-		<div class="modal-body">
-			<div class="row">
-				<div class="col-md-8 mx-auto mt-5 text-center">
-					<p>Resumo</p>
-					  O presente trabalho tem como objetivo simular um holograma e mostrar como funciona.
-					  Um holograma é como uma fotografia tridimensional. A foto tem apenas duas dimensões
-					  (altura e largura), mas o holograma tem altura, largura e profundidade.
-					  Movimentando-se de um lado para outro, o observador consegue ver as laterais do objeto.
-					  Para fazer um holograma, é usado um processo chamado holografia. Essa simulação trás para
-					  os participantes de como funciona um holograma e podendo ver esses aspectos para seus
-					  campos de estudo se interagindo com diversas áreas.
-				</div>
-			</div>
-		</div>
-	  </div>
-	</div>
-  </div>
+    <div class="modal fade" id="projeto3" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Programa de Aperfeiçoamento de Professores de Matemática</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-8 mx-auto mt-5 text-center">
+                            <p>Resumo</p>
+                            Trata-se de um Programa de apio ao auto deesnvolvimento em Matemática - tem o intuito de colaborar com os(as) estudantes de graduação da UFERSA que precisam tratar de dificuldades especificas em bases de conhecimento de matematica. É um curso semi-presencial
+                            no formato de modulos, onde o(a) próprio(a) estudante organiza seus horários de estudos e escolhe os móudlos de aprendizagem. O curso conta com a plataforma de ensino à distância Moodle , onde o estudante tem a disposição vídeo-aulas
+                            selecionadas para cada contéudo e a avaliação com um questionário online.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-  <div class="modal fade" id="projeto5" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
-	  <div class="modal-content">
-		<div class="modal-header">
-		  <h5 class="modal-title" id="exampleModalLabel">Codificações Orientadas para o Desenvolvimento Eletrônico - CODE</h5>
-		  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-		</div>
-		<div class="modal-body">
-			<div class="row">
-				<div class="col-md-8 mx-auto mt-5 text-center">
-					<p>Resumo</p>
-					  CODE (Codificações Orientadas para o Desenvolvimento Eletrônico), é um projeto de pesquisa criado
-					  para desenvolver modelagens de sistemas de controle, com ênfase no microcontrolador programável
-					  arduino. Os participantes já desenvolveram um drone totalmente operacional e uma impressora 3D
-					  baseado no modelo Stella.
-				</div>
-			</div>
-		</div>
-	  </div>
-	</div>
-  </div>
+    <div class="modal fade" id="projeto4" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modelagem matemática em três dimensões</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-8 mx-auto mt-5 text-center">
+                            <p>Resumo</p>
+                            O presente trabalho tem como objetivo simular um holograma e mostrar como funciona. Um holograma é como uma fotografia tridimensional. A foto tem apenas duas dimensões (altura e largura), mas o holograma tem altura, largura e profundidade. Movimentando-se
+                            de um lado para outro, o observador consegue ver as laterais do objeto. Para fazer um holograma, é usado um processo chamado holografia. Essa simulação trás para os participantes de como funciona um holograma e podendo ver
+                            esses aspectos para seus campos de estudo se interagindo com diversas áreas.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-	<div class="modal fade" id="projeto6" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-				<h5 class="modal-title" id="exampleModalLabel">Estudos da equação de Richards com uso do Geogebra</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				</div>
-				<div class="modal-body">
-					<div class="row">
-						<div class="col-md-8 mx-auto mt-5 text-center">
-							<p>Resumo</p>
-							O projeto visa trabalhar os conceitos de análise algébrico na solução de sistemas
-							lineares com aplicações na teoria de controles e física matemática. Em particular,
-							objetiva-se mostrar há métodos mito efetivos para o tratamento de equações diferenciais
-							complexas a partir desta abordagem. O conhecimento dos processos de infiltração e movimento
-							de água no solo são importantes para solucionar problemas práticos em áreas como hidrologia,
-							ciência dos solos, irrigação e drenagem, gestão de recursos naturais e outros.
-							A Equação de Richards é uma equação diferencial parcial parabólica não-linear cujas soluções analíticas
-							são poucas e difíceis de obter, devido à alta não-linearidade dos parâmetros hidráulicos do solo.
-							A maioria delas deriva de linearizações, baseadas em considerações de dependência da condutividade
-							hidráulica com a umidade do solo . Os objetivos da pesquisa é estudar a teoria básica de equações
-							diferenciais ordinárias e parciais lineares e não lineares, e estudar a variaçã ode parâmetros da
-							solução com uso do software Geogebra.
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-  	</div>
+    <div class="modal fade" id="projeto5" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Codificações Orientadas para o Desenvolvimento Eletrônico - CODE</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-8 mx-auto mt-5 text-center">
+                            <p>Resumo</p>
+                            CODE (Codificações Orientadas para o Desenvolvimento Eletrônico), é um projeto de pesquisa criado para desenvolver modelagens de sistemas de controle, com ênfase no microcontrolador programável arduino. Os participantes já desenvolveram um drone totalmente
+                            operacional e uma impressora 3D baseado no modelo Stella.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-	<div class="modal fade" id="projeto7" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-				<h5 class="modal-title" id="exampleModalLabel">Métodos Diagramáticos em Representação de Álgebras</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				</div>
-				<div class="modal-body">
-					<div class="row">
-						<div class="col-md-8 mx-auto mt-5 text-center">
-							<p>Resumo</p>
-							 Trataremos de um estudo de Representações de Álgebras por métodos diagramáticos
-							 no estudo de anéis artinianos. Buscando a classificação por tipos de representações
-							 (mansa, finito ou selvagem), e particular o estudo de categorias de módulo com seqüências
-							 de Auslander-Reiter no estudo de representações de aljavas e/ou conjuntos parcialmente
-							 ordenados/algebra de incidência. Objetivando apresentar a passagem do tratamento desta
-							 problemática em categorias derivadas. O projeto também visa trabalhar os conceitos de
-							 análise algébrico na solução de sistemas lineares com aplicações na teoria de controles
-							 e física matemática. Desta forma a representação da álgebra e do conhecimento da categoria
-							 de módulos finitamente gerados associada a ela pode-se generalizar soluções de equações
-							 diferenciais ordinárias e de equações diferenciais parciais.
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-  	</div>
+    <div class="modal fade" id="projeto6" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Estudos da equação de Richards com uso do Geogebra</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-8 mx-auto mt-5 text-center">
+                            <p>Resumo</p>
+                            O projeto visa trabalhar os conceitos de análise algébrico na solução de sistemas lineares com aplicações na teoria de controles e física matemática. Em particular, objetiva-se mostrar há métodos mito efetivos para o tratamento de equações diferenciais
+                            complexas a partir desta abordagem. O conhecimento dos processos de infiltração e movimento de água no solo são importantes para solucionar problemas práticos em áreas como hidrologia, ciência dos solos, irrigação e drenagem,
+                            gestão de recursos naturais e outros. A Equação de Richards é uma equação diferencial parcial parabólica não-linear cujas soluções analíticas são poucas e difíceis de obter, devido à alta não-linearidade dos parâmetros hidráulicos
+                            do solo. A maioria delas deriva de linearizações, baseadas em considerações de dependência da condutividade hidráulica com a umidade do solo . Os objetivos da pesquisa é estudar a teoria básica de equações diferenciais ordinárias
+                            e parciais lineares e não lineares, e estudar a variaçã ode parâmetros da solução com uso do software Geogebra.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="projeto7" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Métodos Diagramáticos em Representação de Álgebras</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-8 mx-auto mt-5 text-center">
+                            <p>Resumo</p>
+                            Trataremos de um estudo de Representações de Álgebras por métodos diagramáticos no estudo de anéis artinianos. Buscando a classificação por tipos de representações (mansa, finito ou selvagem), e particular o estudo de categorias de módulo com seqüências
+                            de Auslander-Reiter no estudo de representações de aljavas e/ou conjuntos parcialmente ordenados/algebra de incidência. Objetivando apresentar a passagem do tratamento desta problemática em categorias derivadas. O projeto também
+                            visa trabalhar os conceitos de análise algébrico na solução de sistemas lineares com aplicações na teoria de controles e física matemática. Desta forma a representação da álgebra e do conhecimento da categoria de módulos finitamente
+                            gerados associada a ela pode-se generalizar soluções de equações diferenciais ordinárias e de equações diferenciais parciais.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 
-<div class="login">
-	<div class="container mt-4">
-		<div class="row">
-			<div class="col-sm-12 mt-5 text-center text-white">
-				<h3>Cadastro</h3>
-			</div>
-		</div>
+    <div class="login">
+        <div class="container mt-4">
+            <div class="row">
+                <div class="col-sm-12 mt-5 text-center text-white">
+                    <h3>Cadastro</h3>
+                </div>
+            </div>
 
-		<div class="row">
-           <div class="col-md-8 mx-auto mt-5 text-center">
-	           <form action="projeto">
-				 <div class="form-group">
-				    <label for="formGroupExampleInput" class="text-white">Nome</label>
-				    <input type="text" class="form-control" id="nome" name="nome" placeholder="Nome">
-				  
-				    <label for="formGroupExampleInput" class="text-white">E-mail</label>
-				    <input type="text" class="form-control" id="email" name="email" placeholder="E-mail">
+            <div class="row">
+                <div class="col-md-8 mx-auto mt-5 text-center">
+                    <form action="projeto">
+                        <div class="form-group">
+                            <label for="formGroupExampleInput" class="text-white">Nome</label>
+                            <input type="text" class="form-control" id="nome" name="nome" placeholder="Nome">
 
-					<label for="formGroupExampleInput" class="text-white">Estado</label>
-					<select class="form-select" id="estado" aria-label="Default select example">
-						<option selected>Selecione o Estado</option>
-					</select>
+                            <label for="formGroupExampleInput" class="text-white">E-mail</label>
+                            <input type="text" class="form-control" id="email" name="email" placeholder="E-mail">
 
-					<label for="formGroupExampleInput" class="text-white">Municipio</label>
-					<select class="form-select" id="municipios" aria-label="Default select example">
-						<option selected>Selecione o Municipio</option>
-					</select>
-					<!-- <label for="formGroupExampleInput" class="text-white">Cidade</label>
-				    <input type="text" class="form-control" id="cidade" name="cidade" placeholder="Cidade">
+                            <label for="formGroupExampleInput" class="text-white">Estado</label>
+                            <select class="form-select" id="estado" aria-label="Default select example">
+								<option selected>Selecione o Estado</option>
+							</select>
 
-				    <label for="formGroupExampleInput" class="text-white">Nome da Escola</label>
-				    <input type="text" class="form-control" id="nomeEscola" name="nomeEscola" placeholder="Nome da Escola">-->
+                            <label for="formGroupExampleInput" class="text-white">Municipio</label>
+                            <select class="form-select" id="municipios" aria-label="Default select example">
+								<option selected>Selecione o Municipio</option>
+							</select>
+                            <!-- <label for="formGroupExampleInput" class="text-white">Cidade</label>
+				    <input type="text" class="form-control" id="cidade" name="cidade" placeholder="Cidade">-->
 
-					<label for="formGroupExampleInput" class="text-white">Escola</label>
-					<select class="form-select" id="nomeEscola" aria-label="Default select example">
-						<option selected>Selecione a Escola</option>
-					</select>
-
-
-				    <label for="formGroupExampleInput" class="text-white">Telefone</label>
-				    <input type="text" class="form-control" id="telefone" name="telefone" placeholder="Telefone">
-
-				    <label for="formGroupExampleInput" class="text-white">Indicação Professor</label>
-				    <input type="text" class="form-control" id="indicacao" name="indicacao" placeholder="Indicação Professor">
-
-				    <label for="messagem" class="text-white">Tipo de ações que pretende fazer</label>
-				    <textarea class="form-control" id="messagem" name="messagem" rows="3"></textarea>
-				  </div>
-				  <button id="btnEnviar" class="btn btn-primary">Enviar</button>
-			   </form>
-           </div>
-       </div>
-	</div>
-</div>
-
-<div class="container-fluid color-footer">
-	<footer class="page-footer font-small pt-5">
-      <div class="row">
-      	<div class="col-md-12 mx-auto text-center mp-2">
-      		<p>
-				 walterm@ufersa.edu.br
-      		</p>
-
-      	</div>
-      </div>
+                            <!-- <label for="formGroupExampleInput" class="text-white">Escola</label>
+                            <select class="form-select" id="nomeEscola" aria-label="Default select example">
+								<option selected>Selecione a Escola</option>
+							</select> -->
+                            <label for="formGroupExampleInput" class="text-white">Nome da Escola</label>
+                            <input type="text" class="form-control" id="nomeEscola" name="nomeEscola" placeholder="Nome da Escola">
 
 
-      <div class="row">
-      	<div class="col-sm-12 mx-auto">
-		  	<div class="footer-copyright text-center py-3">
-		  		<p><div id="dataAno"> </p>
-		  	</div>
-		 </div>
-		</div>
-	</footer>
-</div>
+                            <label for="formGroupExampleInput" class="text-white">Telefone</label>
+                            <input type="text" class="form-control" id="telefone" name="telefone" placeholder="Telefone">
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script type="text/javascript" src="js/bootstrap.js"></script>
+                            <label for="formGroupExampleInput" class="text-white">Indicação Professor</label>
+                            <input type="text" class="form-control" id="indicacao" name="indicacao" placeholder="Indicação Professor">
 
-	<script>
-		var data = new Date();
-		var ano = data.getFullYear();
-		document.getElementById("dataAno").innerHTML = "Julio Cartier M. Gomes " + ano + ".";
-	</script>
+                            <label for="messagem" class="text-white">Tipo de ações que pretende fazer</label>
+                            <textarea class="form-control" id="messagem" name="messagem" rows="3"></textarea>
+                        </div>
+                        <button id="btnEnviar" class="btn btn-primary">Enviar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid color-footer">
+        <footer class="page-footer font-small pt-5">
+            <div class="row">
+                <div class="col-md-12 mx-auto text-center mp-2">
+                    <p>
+                        walterm@ufersa.edu.br
+                    </p>
+
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-sm-12 mx-auto">
+                    <div class="footer-copyright text-center py-3">
+                        <p>
+                            <div id="dataAno">
+                        </p>
+                        </div>
+                    </div>
+                </div>
+        </footer>
+        </div>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script type="text/javascript" src="js/bootstrap.js"></script>
+
+        <script>
+            var data = new Date();
+            var ano = data.getFullYear();
+            document.getElementById("dataAno").innerHTML = "Julio Cartier M. Gomes " + ano + ".";
+        </script>
 </body>
+
 </html>
-
-
