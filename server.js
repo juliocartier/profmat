@@ -27,7 +27,6 @@ var obj = JSON.parse(fs.readFileSync('config.json', 'utf8'));
 //console.log(obj);
 
 //Conexão com o banco de dados
-//Foi inserido nessa configuração um arquivo "config.json"
 const pool = new Pool({
     user: obj.banco.user,
     host: obj.banco.host,
@@ -35,13 +34,6 @@ const pool = new Pool({
     password: obj.banco.password,
     port: obj.banco.port,
 })
-
-//console.log(pool)
-
-//const CLIENT_ID = '1005697518083-vd1kegae5gt71duvipp5sfjpm0uf0i0m.apps.googleusercontent.com'
-//const CLIENT_SECRET = 'YWV6isHBR_A4OE6RgGpar4Xr'
-//const REDIRECT_URI = 'https://developers.google.com/oauthplayground'
-//const REFRESH_TOKEN = '1//04acCyneBK9JdCgYIARAAGAQSNwF-L9IrSorznzbxc-E8L5wFHWdCqHCjKfGPWo79YSd3Fmp2ePFMk-x7CndOXS_J5BGvORIKuj8'
 
 const oAuth2Cliente = new google.auth.OAuth2(obj.authentic.CLIENT_ID, obj.authentic.CLIENT_SECRET, obj.authentic.REDIRECT_URI)
 oAuth2Cliente.setCredentials({ refresh_token: obj.authentic.REFRESH_TOKEN })
@@ -58,42 +50,6 @@ const transport = nodemailer.createTransport({
         accessToken: accessToken
     }
 })
-
-
-// async function sendMain(){
-
-// 	try {
-
-// 		const accessToken = await oAuth2Cliente.getAccessToken();
-// 		const transport = nodemailer.createTransport({
-// 			service: 'gmail',
-// 			auth: {
-// 				type: 'OAuth2',
-// 				user: 'juliocartier@gmail.com',
-// 				clientId: CLIENT_ID,
-// 				clientSecret: CLIENT_SECRET,
-// 				refreshToken: REFRESH_TOKEN,
-// 				accessToken: accessToken
-// 			}
-// 		})
-
-// 		const mailOptions = {
-// 			from: 'juliocartier@gmail.com',
-// 			to: 'juliocartier@gmail.com',
-// 			subject: 'Sending Email using Node.js',
-// 			text: 'That was easy!',
-// 			html: '<h1>That was easy!</h1>'
-// 		  };
-
-// 		  const result = await transport.sendMail(mailOptions);
-// 		  return result
-
-
-// 	} catch (error){
-// 		return error
-// 	}
-// }
-
 
 app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css'));
 app.use('/js', express.static(__dirname + '/node_modules/bootstrap/dist/js'));
@@ -153,21 +109,6 @@ app.post('/projeto', function(request, response) {
     );
     response.sendFile(path.join(__dirname + '/pages/index_projeto.html'));
 
-    /*var mailOptions = {
-    	from: 'calctarifas@gmail.com',
-    	to: 'juliocartier@gmail.com',
-    	subject: 'Sending Email using Node.js',
-    	text: 'That was easy!'
-      };
-
-      transporter.sendMail(mailOptions, function(error, info){
-    	if (error) {
-    	  console.log(error);
-    	} else {
-    	  console.log('Email sent: ' + info.response);
-    	}
-      });*/
-
 });
 
 app.get('/download', function(request, response) {
@@ -188,7 +129,6 @@ app.post('/email', function(request, response) {
         to: 'juliocartier@gmail.com, walterm@ufersa.edu.br',
         subject: assunto,
         text: messagem
-            //html: '<h1>That was easy!</h1>'
     };
     //delivery
     transport.sendMail(mailOptions, function(error, info) {
@@ -238,20 +178,13 @@ app.post('/login', function(request, response) {
 });
 
 app.get('/home', function(request, response) {
-    //pool.query('SELECT * FROM PROJETOS', function(error, results) {
 
     response.render(__dirname + '/pages/home.html');
-    //res.render(path.join(__dirname, '/public', 'homepage.html'));
-    //});
-
 });
 
 app.get('/cadastro', function(request, response) {
-    //pool.query('SELECT * FROM PROJETOS', function(error, results) {
 
     response.render(__dirname + '/pages/cadastro-projeto.html');
-    //res.render(path.join(__dirname, '/public', 'homepage.html'));
-    //});
 
 });
 
