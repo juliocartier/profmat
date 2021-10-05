@@ -1,5 +1,6 @@
 node_modules/
 .vscode/
+.git
 config.json
 package-lock.json
 
