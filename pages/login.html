@@ -1,97 +1,102 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-	<title>PROFMAT</title>
-	<meta charset="utf-8">
+    <title>Walterm</title>
+    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
-	<link rel="stylesheet" href="/css/style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
 </head>
+
 <body>
 
-<div class="container-fluid">
-	<nav class="navbar navbar-expand-lg navbar-light nav-color navbar-fixed-top pt-4">
-	  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <div class="container-fluid">
+        <nav class="navbar navbar-expand-lg navbar-light nav-color navbar-fixed-top pt-4">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 	    <!--<span class="navbar-toggler-icon text-white"></span>-->
       <img src="img/menu.png" class="img-responsive" alt="menu" width="30" height="30">
 	  </button>
 
-	  <div class="collapse navbar-collapse" id="navbarSupportedContent" style="padding-left: 10px;">
-	    <ul class="navbar-nav mr-auto">
-	      <li class="nav-item active">
-	        <a class="nav-link text-white" href="/">Home</a>
-	      </li>
-	  	</ul>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent" style="padding-left: 10px;">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link text-white" href="/">Home</a>
+                    </li>
+                </ul>
 
-	  	<ul class="navbar-nav ml-auto">
-	      <li class="nav-item">
-	        <a class="nav-link text-white" href="login">Login</a>
-	      </li>
-	    </ul>
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="login">Login</a>
+                    </li>
+                </ul>
 
-	  </div>
-	</nav>
-</div>
-
-
-
-<div class="login">
-	<div class="container mt-4">
-		<div class="row">
-			<div class="col-sm-12 mt-5 text-center text-white">
-				<h3>Login</h3>
-			</div>
-		</div>
-
-		<div class="row">
-           <div class="col-md-8 mx-auto mt-5 text-center">
-	           <form action="login" method="POST">
-				  <div class="form-group">
-				    <label for="formGroupExampleInput" class="text-white">E-mail</label>
-				    <input type="text" class="form-control" id="email" name="email" placeholder="E-mail">
-				  </div>
-				  <div class="form-group">
-				    <label for="formGroupExampleInput3" class="text-white">Senha</label>
-				    <input type="password" class="form-control" id="senha" name="senha" placeholder="Senha">
-				  </div>
-				  <button type="submit" class="btn btn-primary">Enviar</button>
-			   </form>
-           </div>
-       </div>
-	</div>
-</div>
-
-<div class="container-fluid color-footer">
-	<footer class="page-footer font-small pt-5">
-      <div class="row">
-      	<div class="col-md-12 mx-auto text-center mp-2">
-      		<p>
-      			 walterm@ufersa.edu.br
-      		</p>
-
-      	</div>
-      </div>
+            </div>
+        </nav>
+    </div>
 
 
-      <div class="row">
-      	<div class="col-sm-12 mx-auto">
-		  	<div class="footer-copyright text-center py-3">
-		  		<p><div id="dataAno"> </p>
-		  	</div>
-		 </div>
-	  </div>
-	</footer>
-</div>
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
+    <div class="login">
+        <div class="container mt-4">
+            <div class="row">
+                <div class="col-sm-12 mt-5 text-center text-white">
+                    <h3>Login</h3>
+                </div>
+            </div>
 
-	<script>
-		var data = new Date();
-		var ano = data.getFullYear();
-		document.getElementById("dataAno").innerHTML = "Julio Cartier M. Gomes " + ano + ".";
-	</script>
+            <div class="row">
+                <div class="col-md-8 mx-auto mt-5 text-center">
+                    <form action="login" method="POST">
+                        <div class="form-group">
+                            <label for="formGroupExampleInput" class="text-white">E-mail</label>
+                            <input type="text" class="form-control" id="email" name="email" placeholder="E-mail">
+                        </div>
+                        <div class="form-group">
+                            <label for="formGroupExampleInput3" class="text-white">Senha</label>
+                            <input type="password" class="form-control" id="senha" name="senha" placeholder="Senha">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Enviar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid color-footer">
+        <footer class="page-footer font-small pt-5">
+            <div class="row">
+                <div class="col-md-12 mx-auto text-center mp-2">
+                    <p>
+                        walterm@ufersa.edu.br
+                    </p>
+
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-sm-12 mx-auto">
+                    <div class="footer-copyright text-center py-3">
+                        <p>
+                            <div id="dataAno">
+                        </p>
+                        </div>
+                    </div>
+                </div>
+        </footer>
+        </div>
+
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
+
+        <script>
+            var data = new Date();
+            var ano = data.getFullYear();
+            document.getElementById("dataAno").innerHTML = "Julio Cartier M. Gomes " + ano + ".";
+        </script>
 </body>
+
 </html>
