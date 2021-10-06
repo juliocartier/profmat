@@ -24,7 +24,7 @@ const { Console } = require('console');
 
 var obj = JSON.parse(fs.readFileSync('config.json', 'utf8'));
 
-//console.log(obj);
+//console.log(obj); Testeeee
 
 //Conexão com o banco de dados
 const pool = new Pool({
