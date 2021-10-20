@@ -70,7 +70,6 @@
             $("#dataBusca").val(d.getFullYear());
 
 
-
             $("#buscar").click(function() {
 
                 data = $("#dataBusca").val().split("-");
@@ -94,7 +93,7 @@
                         dataFim: dataFim
                     },
                     success: function(data) {
-                        console.log(data);
+                        //console.log(data);
 
                         for (i = 0; i < data.length; i++) {
 
@@ -116,7 +115,7 @@
 							$("#acoes").append(data["acoes"])*/
                         }
 
-                        console.log(trHTML)
+                        //console.log(trHTML)
 
                         $('#records_table').append(trHTML);
 
@@ -127,7 +126,34 @@
                 })
 
             });
-            // Code that uses jQuery's $ can follow here.
+
+            $("#buscarExcel").click(function() {
+                    data = $("#dataBusca").val().split("-");
+
+                    dataInicio = data[0];
+                    dataFim = data[1];
+
+                    console.log("Testeeeee", dataInicio, dataFim);
+
+                    window.location.href = "/buscarExcel"
+
+                    /*$.ajax({
+                        url: '/buscarExcel',
+                        type: 'POST',
+                        cache: false,
+                        data: {
+                            dataInicio: dataInicio,
+                            dataFim: dataFim
+                        },
+                        success: function(data) {
+                            console.log(data);
+                        },
+                        error: function(jqXHR, textStatus, err) {
+                            console.log('text status ' + textStatus + ', err ' + err)
+                        }
+                    })*/
+                })
+                // Code that uses jQuery's $ can follow here.
         });
         /*$(document).ready(function () {
     		console.log( "document loaded" );
@@ -201,6 +227,8 @@
                 </div>
                 <div class="col-sm-6">
                     <button type="submit" class="btn btn-primary" id="buscar">Buscar</button>
+                    <button type="submit" class="btn btn-primary" id="buscarExcel">Download</button>
+                    <!-- <a href="/buscarExcel" class="btn">Download</a> -->
                 </div>
             </div>
 
