@@ -1,7 +1,8 @@
+require('dotenv').config()
+
 var http = require('http');
 var fs = require('fs');
 var path = require('path');
-//var mysql = require('mysql');
 var express = require('express');
 var session = require('express-session');
 var bodyParser = require('body-parser');
@@ -10,8 +11,10 @@ const { google } = require('googleapis');
 var smtpTransport = require('nodemailer-smtp-transport')
 const date = require('date-and-time');
 var moment = require('moment');
-const Excel = require('exceljs');
 
+var excel = require('node-excel-export');
+
+const jwt = require('jsonwebtoken')
 
 var app = express();
 
@@ -24,6 +27,9 @@ const { Pool } = require('pg');
 const { Console } = require('console');
 
 var obj = JSON.parse(fs.readFileSync('config.json', 'utf8'));
+
+let refreshTokens = [];
+let acessToken;
 
 //console.log(obj); Testeeee
 
@@ -66,7 +72,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.get('/', function(request, response) {
-    response.sendFile(path.join(__dirname + '/index.html'));
+    response.sendFile(path.join(__dirname + '/pages/index.html'));
 });
 
 app.get('/login', function(request, response) {
@@ -123,7 +129,7 @@ app.post('/email', function(request, response) {
     var assunto = request.body.assunto;
     var messagem = request.body.messagem;
 
-    console.log("Entrou aqui", email, assunto, messagem);
+    //console.log("Entrou aqui", email, assunto, messagem);
 
     const mailOptions = {
         from: email,
@@ -157,6 +163,17 @@ app.post('/login', function(request, response) {
             } else {
                 //console.log('Entrou aqui', results.rows[0]['username'], username);
                 if (results.rows[0]['username'] == username && results.rows[0]['password'] == password) {
+
+                    const user = { name: username }
+
+                    //const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET)
+                    //const accessToken = generateAcessToken(user)
+                    acessToken = generateAcessToken(user)
+                    const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET)
+                    refreshTokens.push(refreshToken)
+
+                    console.log(accessToken)
+
                     request.session.loggedin = true;
                     request.session.username = username;
 
@@ -178,14 +195,14 @@ app.post('/login', function(request, response) {
     }
 });
 
-app.get('/home', function(request, response) {
+app.get('/home', authenticateToken, function(request, response) {
 
     response.render(__dirname + '/pages/home.html');
 });
 
-app.get('/cadastro', function(request, response) {
+app.get('/cadastro', authenticateToken, function(request, response) {
 
-    sqlString = "SELECT * FROM CADASTRO_PROJETOS"
+    sqlString = "SELECT * FROM CADASTRO_PROJETOS ORDER BY ID"
 
 
     pool.query(sqlString, function(error, results) {
@@ -199,7 +216,7 @@ app.get('/cadastro', function(request, response) {
             //console.log(results.rows)
             //response.send(JSON.parse(JSON.stringify(results.rows)))
             //response.render(__dirname + '/pages/cadastro-projeto.html', { data: JSON.parse(JSON.stringify(results.rows)) });
-            response.status(200).render(__dirname + '/pages/cadastro-projeto.html', { dados: JSON.stringify(results.rows) });
+            response.status(200).render(__dirname + '/pages/cadastro-projeto.html', { results: results });
 
         }
 
@@ -211,6 +228,77 @@ app.get('/cadastro', function(request, response) {
     //response.render(__dirname + '/pages/cadastro-projeto.html');
 
 });
+
+app.put('/cadastro/:id', authenticateToken, function(request, response) {
+
+    id = parseInt(request.body.id);
+
+    console.log("Entrouuuu 22", id);
+
+    sqlString = "SELECT * FROM CADASTRO_PROJETOS WHERE ID = $1"
+
+
+    pool.query(sqlString, [id], function(error, results) {
+
+        if (error) {
+            console.log("Entrouuu", error.stack)
+
+            response.send(JSON.stringify(error.stack))
+        } else {
+
+            response.json(JSON.parse(JSON.stringify(results.rows)));
+
+            //console.log(results.rows)
+            //response.send(JSON.parse(JSON.stringify(results.rows)))
+            //response.render(__dirname + '/pages/cadastro-projeto.html', { data: JSON.parse(JSON.stringify(results.rows)) });
+            //response.status(200).render(__dirname + '/pages/cadastro-projeto.html', { results: results });
+
+        }
+
+
+
+    });
+
+
+    //response.render(__dirname + '/pages/cadastro-projeto.html');
+
+});
+
+app.delete('/cadastro/:id', authenticateToken, function(request, response) {
+
+    id = parseInt(request.body.id);
+
+    console.log("Entrouuuuu", id)
+    sqlString = "DELETE FROM CADASTRO_PROJETOS WHERE id = $1"
+
+
+    pool.query(sqlString, [id], function(error, results) {
+
+        if (error) {
+            console.log("Entrouuu", error)
+
+            response.send(JSON.stringify(error.stack))
+        } else {
+
+            //console.log(results.rows)
+            //response.send(JSON.parse(JSON.stringify(results.rows)))
+            //response.render(__dirname + '/pages/cadastro-projeto.html', { data: JSON.parse(JSON.stringify(results.rows)) });
+            //response.status(200).render(__dirname + '/pages/cadastro-projeto.html');
+
+            response.json({ success: true });
+            //response.redirect('/cadastro');
+
+        }
+
+
+
+    });
+
+
+    //response.render(__dirname + '/pages/cadastro-projeto.html');
+
+});
+
 
 app.post('/buscarDadosPorData', function(request, response) {
 
@@ -250,96 +338,158 @@ app.post('/buscarDadosPorData', function(request, response) {
 
 });
 
-app.get('/buscarExcel', function(request, response) {
+app.post('/buscarExcel', function(request, response) {
 
 
-    console.log("Entrouuuu aquiiii");
+    //console.log(request.body['data'])
+
+    //dataInicio = request.body['dataInicio'];
+    //dataFim = request.body['dataFim'];
 
     dataInicio = "'" + request.body['dataInicio'].split("/").reverse().join("-").replace(/\s+/g, '') + "'";
     dataFim = "'" + request.body['dataFim'].split("/").reverse().join("-").replace(/\s+/g, '') + "'";
 
-    //const workbook = new Excel.Workbook();
-    //const worksheet = workbook.addWorksheet("My Sheet");
+    let styles = {
+        headerDark: {
+            font: {
+                color: {
+                    rgb: 'FF000000'
+                },
+                sz: 12,
+                bold: false,
+                underline: false
+            }
+        }
+    };
+    //console.log("Entrouuuu aquiiii");
 
-    //worksheet.columns = [
-    //    { header: 'Id', key: 'id', width: 10 },
-    //   { header: 'Name', key: 'name', width: 32 },
-    //    { header: 'D.O.B.', key: 'dob', width: 15, }
-    //];
-
-    //worksheet.addRow({ id: 1, name: 'John Doe', dob: new Date(1970, 1, 1) });
-    //worksheet.addRow({ id: 2, name: 'Jane Doe', dob: new Date(1965, 1, 7) });
-
-    // save under export.xlsx
-    //workbook.xlsx.writeFile('export.xlsx');
-
-    var workbook = new Excel.Workbook();
-
-    workbook.creator = 'Me';
-    workbook.lastModifiedBy = 'Her';
-    workbook.created = new Date(1985, 8, 30);
-    workbook.modified = new Date();
-    workbook.lastPrinted = new Date(2016, 9, 27);
-    workbook.properties.date1904 = true;
-
-    workbook.views = [{
-        x: 0,
-        y: 0,
-        width: 10000,
-        height: 20000,
-        firstSheet: 0,
-        activeTab: 1,
-        visibility: 'visible'
-    }];
-    var worksheet = workbook.addWorksheet('My Sheet');
-    worksheet.columns = [
-        { header: 'Id', key: 'id', width: 10 },
-        { header: 'Name', key: 'name', width: 32 },
-        { header: 'D.O.B.', key: 'dob', width: 10, outlineLevel: 1, type: 'date', formulae: [new Date(2016, 0, 1)] }
-    ];
-
-    worksheet.addRow({ id: 1, name: 'John Doe', dob: new Date(1970, 1, 1) });
-    worksheet.addRow({ id: 2, name: 'Jane Doe', dob: new Date(1965, 1, 7) });
-
-    response.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    response.setHeader("Content-Disposition", "attachment; filename=" + "Report.xlsx");
-    workbook.xlsx.write(response)
-        .then(function(data) {
-            response.end();
-            console.log('File write done........');
-        });
-
-    //console.log(dataInicio, dataFim)
-
-    // sqlString = "SELECT * FROM PROJETOS WHERE TO_CHAR(DATA_CADASTRO, 'YYYY-MM-DD') > REPLACE(" + dataInicio + ", ' ', '') AND TO_CHAR(DATA_CADASTRO, 'YYYY-MM-DD') <= REPLACE(" + dataFim + ", ' ', '')"
-    //     //sqlString = "SELECT * FROM projetos"
-    // pool.query(sqlString, function(error, results) {
-
-    //     if (error) {
-    //         console.log(error.stack)
-
-    //         response.send(JSON.stringify(error.stack))
-    //     } else {
-
-    //         response.send(JSON.parse(JSON.stringify(results.rows)))
-
-    //     }
+    // export structure
+    let specification = {
+        id: { // <- the key should match the actual data key
+            displayName: 'Id', // <- Here you specify the column header
+            headerStyle: styles.headerDark,
+            width: 120 // <- width in pixels
+        },
+        data_cadastro: {
+            displayName: 'Data de Cadastro',
+            headerStyle: styles.headerDark,
+            width: 220 // <- width in pixels
+        },
+        nome: {
+            displayName: 'Nome',
+            headerStyle: styles.headerDark,
+            width: 220 // <- width in pixels
+        },
+        email: {
+            displayName: 'E-mail',
+            headerStyle: styles.headerDark,
+            width: 220 // <- width in pixels
+        },
+        uf: {
+            displayName: 'UF',
+            headerStyle: styles.headerDark,
+            width: 220 // <- width in pixels
+        },
+        cidade: {
+            displayName: 'Cidade',
+            headerStyle: styles.headerDark,
+            width: 220 // <- width in pixels
+        },
+        nomeescola: {
+            displayName: 'Nome da Escola',
+            headerStyle: styles.headerDark,
+            width: 220 // <- width in pixels
+        },
+        telefone: {
+            displayName: 'Telefone',
+            headerStyle: styles.headerDark,
+            width: 220 // <- width in pixels
+        },
+        indicacaoprofessor: {
+            displayName: 'Indicação do Professor',
+            headerStyle: styles.headerDark,
+            width: 220 // <- width in pixels
+        },
+        acoes: {
+            displayName: 'Ações',
+            headerStyle: styles.headerDark,
+            width: 220 // <- width in pixels
+        }
+    };
 
 
 
-    //});
+    sqlString = "SELECT * FROM PROJETOS WHERE TO_CHAR(DATA_CADASTRO, 'YYYY-MM-DD') > REPLACE(" + dataInicio + ", ' ', '') AND TO_CHAR(DATA_CADASTRO, 'YYYY-MM-DD') <= REPLACE(" + dataFim + ", ' ', '')"
 
-    //console.log("Entrou aqui", sqlString)
+    pool.query(sqlString, function(error, results) {
+
+        if (error) {
+            console.log(error.stack)
+
+            response.send(JSON.stringify(error.stack))
+        } else {
+
+            /*let dataset = [
+                { customer_name: 'IBM', status_id: 1, note: 'some note', misc: 'not shown' },
+                { customer_name: 'HP', status_id: 0, note: 'some note' },
+                { customer_name: 'MS', status_id: 0, note: 'some note', misc: 'not shown' }
+            ];*/
+
+            //console.log(results.rows[0].id)
+            //console.log(JSON.stringify(results.rows.id))
+            //let dataset = [{ customer_name: results.rows[0].id }]
+            let dataset = []
+            for (i = 0; i < results.rowCount; i++) {
+                dataset.push({
+                    id: results.rows[i].id,
+                    data_cadastro: results.rows[i].data_cadastro,
+                    nome: results.rows[i].nome,
+                    email: results.rows[i].email,
+                    uf: results.rows[i].uf,
+                    cidade: results.rows[i].cidade,
+                    nomeescola: results.rows[i].nomeescola,
+                    telefone: results.rows[i].telefone,
+                    indicacaoprofessor: results.rows[i].indicacaoprofessor,
+                    acoes: results.rows[i].acoes
+                })
+            }
+
+            console.log(dataset)
+
+
+            // Create the excel report.
+            // This function will return Buffer
+            let report = excel.buildExport(
+                [ // <- Notice that this is an array. Pass multiple sheets to create multi sheet report
+                    {
+                        name: 'Incrições', // <- Specify sheet name (optional)
+                        specification: specification, // <- Report specification
+                        data: dataset // <-- Report data
+                            //data: results.rows
+                    }
+                ]
+            );
+
+            // convert excel file content to base64 and send to a client
+            response.send({ content: report.toString('base64') });
+            //response.send(JSON.parse(JSON.stringify(results.rows)))
+
+        }
+
+    });
 
 });
 
-app.post('/cadastro', function(request, response) {
+app.post('/cadastro', authenticateToken, function(request, response) {
     //console.log("Entrou aqqqqq", request.body.nome)
 
+    var id = request.body.id;
     var nome = request.body.nome;
     var status = request.body.status;
     var resumo = request.body.resumo;
     var texto = request.body.texto;
+
+    console.log("Entrouuu no id", !id)
 
     var data = new Date();
     data_insert = date.format(data, 'YYYY-MM-DD HH:mm:ss');
@@ -348,18 +498,39 @@ app.post('/cadastro', function(request, response) {
     const text = "INSERT INTO CADASTRO_PROJETOS(titulo_do_projeto, resumo, texto_projeto, status) VALUES ($1, $2, $3, $4)";
     const valores = [nome, resumo, texto, status]
 
-    //console.log(text, valores)
-    pool.query(text, valores,
-        (err, res) => {
-            if (err) {
-                console.log(err.stack)
-            } else {
-                console.log("Valores Inseridos", res);
-            }
+    const sqlStringUpdate = "UPDATE CADASTRO_PROJETOS SET titulo_do_projeto = $1, resumo = $2, texto_projeto = $3, status = $4 WHERE id = $5";
+    const valoresUpdate = [nome, resumo, texto, status, id]
 
-            pool.end();
-        }
-    );
+    //console.log(text, valores)
+    if (!id) {
+        pool.query(text, valores,
+            (err, res) => {
+                if (err) {
+                    console.log(err.stack)
+                } else {
+                    console.log("Valores Inseridos", res);
+                    response.json({ success: true });
+                }
+
+                //pool.end();
+            }
+        );
+    } else {
+
+        pool.query(sqlStringUpdate, valoresUpdate,
+            (err, res) => {
+                if (err) {
+                    console.log(err.stack)
+                } else {
+                    console.log("Valores Atualizados", res);
+                    response.json({ success: true });
+                }
+
+                //pool.end();
+            }
+        );
+
+    }
 
     //console.log("EEEEEEEE");
     //response.redirect('/cadastro');
@@ -368,8 +539,32 @@ app.post('/cadastro', function(request, response) {
 });
 
 app.get('/sair', function(request, response) {
+    refreshTokens = []
+    acessToken = ''
     response.redirect('/login');
 });
+
+function generateAcessToken(user) {
+    return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '20m' })
+}
+
+function authenticateToken(req, res, next) {
+
+    //console.log("Entrouuu", acessToken)
+    //const authHeader = req.headers['authorization']
+    //const authHeader = acessToken
+    const token = acessToken
+        //const token = authHeader && authHeader.split(' ')[1]
+    console.log(token)
+
+    if (token == null) return res.sendStatus(401)
+
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+        if (err) return res.sendStatus(403)
+        req.user = user
+        next()
+    })
+}
 
 app.listen(PORT, () => {
     console.log("Executando o projeto", PORT);

@@ -162,11 +162,21 @@
                         <a class="nav-link text-white" href="/">Home</a>
                     </li>
                 </ul>
-                <!-- <ul class="navbar-nav ml-auto">
-	      <li class="nav-item">
-	        <a class="nav-link text-white" href="login">Login</a>
-	      </li>
-	    </ul> 
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="#projetosAndamentos">Projetos em Andamento</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="#projetosFinalizados">Projetos Finalizados</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="#projetoEmBreve">Projetos em Breve</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="#cadastro">Cadastro</a>
+                    </li>
+                </ul>
+                <!--
 			Requisição para pegar as escolas
 			http://educacao.dadosabertosbr.com/api/escolas/buscaavancada?estado=RN&cidade=2408102
 		-->
@@ -175,7 +185,7 @@
         </nav>
     </div>
 
-    <div class="login">
+    <div class="login" id="projetosAndamentos">
         <div class="container mt-4">
             <div class="row">
                 <div class="col-sm-12 mt-5 text-center text-white">
@@ -240,7 +250,7 @@
         </div>
     </div>
 
-    <div class="login">
+    <div class="login" id="projetosFinalizados">
         <div class="container mt-4">
             <div class="row">
                 <div class="col-sm-12 mt-5 text-center text-white">
@@ -305,7 +315,7 @@
         </div>
     </div>
 
-    <div class="login">
+    <div class="login" id="projetosEmBreve">
         <div class="container mt-4">
             <div class="row">
                 <div class="col-sm-12 mt-5 text-center text-white">
@@ -502,7 +512,7 @@
 
 
 
-    <div class="login">
+    <div class="login" id="cadastro">
         <div class="container mt-4">
             <div class="row">
                 <div class="col-sm-12 mt-5 text-center text-white">
@@ -549,7 +559,7 @@
                             <label for="messagem" class="text-white">Tipo de ações que pretende fazer</label>
                             <textarea class="form-control" id="messagem" name="messagem" rows="3"></textarea>
                         </div>
-                        <button id="btnEnviar" class="btn btn-primary">Enviar</button>
+                        <button id="btnEnviar" class="btn btn-primary mt-3">Enviar</button>
                     </form>
                 </div>
             </div>

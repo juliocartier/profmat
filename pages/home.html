@@ -133,11 +133,26 @@
                     dataInicio = data[0];
                     dataFim = data[1];
 
-                    console.log("Testeeeee", dataInicio, dataFim);
+                    //console.log("Testeeeee", JSON.stringify(data));
 
-                    window.location.href = "/buscarExcel"
+                    // '/cadastro/' + id,
 
-                    /*$.ajax({
+                    //window.location.href = "/buscarExcel/" + JSON.stringify(data)
+
+                    /*$.post('/buscarExcel', function(resp) {
+                        let uri = "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,";
+                        let url = uri + resp.content;
+
+                        console.log(resp)
+
+                        setTimeout(function() {
+                            location.href = url;
+                        }, 100);
+                    });*/
+
+                    let uri = "data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,";
+
+                    $.ajax({
                         url: '/buscarExcel',
                         type: 'POST',
                         cache: false,
@@ -146,12 +161,18 @@
                             dataFim: dataFim
                         },
                         success: function(data) {
+
+                            let url = uri + data.content;
                             console.log(data);
+
+                            setTimeout(function() {
+                                location.href = url;
+                            }, 100);
                         },
                         error: function(jqXHR, textStatus, err) {
                             console.log('text status ' + textStatus + ', err ' + err)
                         }
-                    })*/
+                    })
                 })
                 // Code that uses jQuery's $ can follow here.
         });

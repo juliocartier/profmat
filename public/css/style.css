@@ -519,3 +519,156 @@ button span {
     border-radius: 50%;
     top: 36px;
 }
+
+
+/*********************** Demo - 17 *******************/
+
+.box17 {
+    overflow: hidden
+}
+
+.mt-30 {
+    margin-top: 30px
+}
+
+.mt-40 {
+    margin-top: 40px
+}
+
+.mb-30 {
+    margin-bottom: 30px
+}
+
+.box17 {
+    box-shadow: 0 0 5px #7e7d7d;
+    text-align: center
+}
+
+.box17 .icon li a {
+    border-radius: 50%;
+    font-size: 20px;
+    color: #fff
+}
+
+.box17 .icon li,
+.box17 .icon li a {
+    display: inline-block
+}
+
+.box17 {
+    position: relative
+}
+
+.box17:after {
+    content: "";
+    width: 100%;
+    height: 100%;
+    background: rgba(2, 162, 221, .9);
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    transition: all .5s ease 0s
+}
+
+.box17:hover:after {
+    opacity: 1
+}
+
+.box17 img {
+    width: 100%;
+    height: auto;
+    transition: all 1.5s ease 0s
+}
+
+.box17 .box-content,
+.box17 .icon li a {
+    position: absolute;
+    transition: all .6s ease 0s
+}
+
+.box17:hover img {
+    transform: scale(1.2)
+}
+
+.box17 .icon {
+    width: 100%;
+    height: 100%;
+    list-style: none;
+    padding: 0;
+    margin: 0 auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1
+}
+
+.box17 .icon li a {
+    width: 45px;
+    height: 45px;
+    line-height: 45px;
+    margin: 0 auto;
+    top: 50%;
+    border: 1px solid #fff;
+    opacity: 0
+}
+
+.box17:hover .icon li a {
+    top: 30%;
+    opacity: 1
+}
+
+.box17 .icon li a:hover {
+    background: #fff;
+    color: #02a2dd
+}
+
+.box17 .icon li:first-child a {
+    left: -90%;
+    right: 0
+}
+
+.box17:hover .icon li:first-child a {
+    left: -55px
+}
+
+.box17 .icon li:last-child a {
+    right: -90%;
+    left: 0
+}
+
+.box17:hover .icon li:last-child a {
+    right: -55px
+}
+
+.box17 .box-content {
+    width: 100%;
+    padding: 20px 10px;
+    background: rgba(0, 0, 0, .1);
+    bottom: -100px;
+    left: 0;
+    z-index: 1
+}
+
+.box17:hover .box-content {
+    bottom: 0
+}
+
+.box17 .title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    margin-top: 0
+}
+
+.box17 .post {
+    display: block;
+    font-size: 14px;
+    color: #fff
+}
+
+@media only screen and (max-width:990px) {
+    .box17 {
+        margin-bottom: 30px
+    }
+}
