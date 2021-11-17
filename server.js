@@ -122,6 +122,9 @@ app.get('/download', function(request, response) {
     response.download(__dirname + '/public/Template.doc');
 });
 
+app.get('/downloadInformacoes', function(request, response) {
+    response.download(__dirname + '/public/BancaApres.pdf');
+});
 
 app.post('/email', function(request, response) {
 
@@ -542,6 +545,28 @@ app.get('/sair', function(request, response) {
     refreshTokens = []
     acessToken = ''
     response.redirect('/login');
+});
+
+app.get('/projetosEmAndamento', function(request, response) {
+
+    sqlString = "SELECT * FROM CADASTRO_PROJETOS WHERE STATUS LIKE 'andamento' ORDER BY ID"
+
+    pool.query(sqlString, function(error, results) {
+
+        if (error) {
+            console.log("Entrouuu", error.stack)
+
+            response.send(JSON.stringify(error.stack))
+        } else {
+
+            console.log(results);
+            response.send(JSON.parse(JSON.stringify(results.rows)))
+            //response.status(200).render(__dirname + '/pages/index_projeto.html', { results: results });
+
+        }
+
+    });
+
 });
 
 function generateAcessToken(user) {

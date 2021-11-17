@@ -24,7 +24,8 @@ body {
 }
 
 .portfolioImg {
-    border-radius: 120px;
+    border-radius: 260px;
+    width: 60%;
 }
 
 .sobre {
@@ -277,6 +278,12 @@ button span {
     box-shadow: 0 0 5px #ff3636;
 }
 
+@media (min-width: 768px) {
+    .col-md-32 {
+        flex: 0 0 auto;
+        width: 20%;
+    }
+}
 
 /* Medium Devices, .visible-md-* */
 
@@ -577,7 +584,7 @@ button span {
 
 .box17 img {
     width: 100%;
-    height: auto;
+    height: 250px;
     transition: all 1.5s ease 0s
 }
 
@@ -671,4 +678,10 @@ button span {
     .box17 {
         margin-bottom: 30px
     }
+}
+
+.btn-outline-info-link{
+    color: #fff;
+    background-color: #d6d8d900;
+    border-color: #0dcaf0;
 }
