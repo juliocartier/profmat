@@ -109,12 +109,13 @@ app.post('/projeto', function(request, response) {
                 console.log(err.stack)
             } else {
                 console.log("Valores Inseridos", res);
+                response.json({ success: true });
             }
 
             pool.end();
         }
     );
-    response.sendFile(path.join(__dirname + '/pages/index_projeto.html'));
+    //response.sendFile(path.join(__dirname + '/pages/index_projeto.html'));
 
 });
 
@@ -561,7 +562,7 @@ app.get('/projetosEmAndamento', function(request, response) {
 
             console.log(results);
             response.send(JSON.parse(JSON.stringify(results.rows)))
-            //response.status(200).render(__dirname + '/pages/index_projeto.html', { results: results });
+                //response.status(200).render(__dirname + '/pages/index_projeto.html', { results: results });
 
         }
 

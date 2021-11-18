@@ -19,8 +19,8 @@
         jQuery(document).ready(function($) {
 
             $('#projetosAndamentos').each(function() {
-               console.log("Testeeee");
-               $.ajax({
+                console.log("Testeeee");
+                $.ajax({
                     url: '/projetosEmAndamento',
                     type: 'GET',
                     cache: false,
@@ -127,32 +127,59 @@
                 indicacao = $("#indicacao").val()
                 messagem = $("#messagem").val()
 
-                dados = {
-                    nome,
-                    email,
-                    estado,
-                    municipios,
-                    nomeEscola,
-                    telefone,
-                    indicacao,
-                    messagem
+                if (Boolean(nome) == false) {
+                    $("#nome").focus();
+                    return alert("Digite o seu nome!")
+                } else if (Boolean(email) == false) {
+                    $("#email").focus();
+                    return alert("Digite o seu email!")
+                } else if (Boolean(estado) == false) {
+                    $("#estado").focus();
+                    return alert("Escolha o estado em que está situado!")
+                } else if (Boolean(municipios) == false) {
+                    $("#municipios").focus();
+                    return alert("Escolha o municipio em que está situado!")
+                } else if (Boolean(nomeEscola) == false) {
+                    $("#nomeEscola").focus();
+                    return alert("Digite o nome da escola!")
+                } else if (Boolean(telefone) == false) {
+                    $("#telefone").focus();
+                    return alert("Digite o número de um telefone!")
+                } else if (Boolean(indicacao) == false) {
+                    $("#indicacao").focus();
+                    return alert("Digite a indicação!")
+                } else if (Boolean(messagem) == false) {
+                    $("#messagem").focus();
+                    return alert("Digite os tipos de ações que pretende fazer!")
+                } else {
+
+                    dados = {
+                        nome,
+                        email,
+                        estado,
+                        municipios,
+                        nomeEscola,
+                        telefone,
+                        indicacao,
+                        messagem
+                    }
+
+                    $.ajax({
+                        url: '/projeto',
+                        type: 'POST',
+                        cache: false,
+                        data: dados,
+                        success: function(result) {
+                            console.log("Entrou aqui 2", result);
+
+                        },
+                        error: function(jqXHR, textStatus, err) {
+                            console.log('text status ' + textStatus + ', err ' + err)
+                        }
+                    })
+
                 }
 
-                console.log(dados);
-
-                $.ajax({
-                    url: '/projeto',
-                    type: 'POST',
-                    cache: false,
-                    data: dados,
-                    success: function(result) {
-                        console.log("Entrou aqui 2", result);
-
-                    },
-                    error: function(jqXHR, textStatus, err) {
-                        console.log('text status ' + textStatus + ', err ' + err)
-                    }
-                })
             })
 
         })

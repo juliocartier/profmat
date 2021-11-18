@@ -68,7 +68,7 @@ button span {
 }
 
 .login {
-    background-color: rgb(24, 64, 123) !important;
+    background-color: #0f044c !important;
     padding: 50px;
     padding-top: 10%;
 }
@@ -284,6 +284,7 @@ button span {
         width: 20%;
     }
 }
+
 
 /* Medium Devices, .visible-md-* */
 
@@ -680,7 +681,7 @@ button span {
     }
 }
 
-.btn-outline-info-link{
+.btn-outline-info-link {
     color: #fff;
     background-color: #d6d8d900;
     border-color: #0dcaf0;

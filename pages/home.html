@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang=”pt-br”>
 
 <head>
     <title>Walterm</title>
@@ -93,11 +93,14 @@
                         dataFim: dataFim
                     },
                     success: function(data) {
-                        //console.log(data);
+                        console.log(data);
 
+                        var teste = moment.locale('pt-br');
                         for (i = 0; i < data.length; i++) {
 
-                            trHTML += '<tr class="text-white"><td>' + data[i]["data_cadastro"] + '</td><td>' + data[i]["nome"] + '</td><td>' + data[i]["email"] + '</td><td>' + data[i]["uf"] + '</td><td>' + data[i]["cidade"] + '</td><td>' + data[i]["nomeescola"] + '</td><td>' + data[i]["telefone"] + '</td><td>' + data[i]["indicacaoprofessor"] + '</td><td>' + data[i]["acoes"] + '</td></tr>';
+                            parts = data[i]["data_cadastro"].split('-');
+
+                            trHTML += '<tr class="text-white"><td>' + moment(data[i]["data_cadastro"]).format("DD/MM/YYYY HH:mm:ss") + '</td><td>' + data[i]["nome"] + '</td><td>' + data[i]["email"] + '</td><td>' + data[i]["uf"] + '</td><td>' + data[i]["cidade"] + '</td><td>' + data[i]["nomeescola"] + '</td><td>' + data[i]["telefone"] + '</td><td>' + data[i]["indicacaoprofessor"] + '</td><td>' + data[i]["acoes"] + '</td></tr>';
                             //console.log($("#data_cadastro").append(data["data_cadastro"]))
                             /*
 							<th scope="col">Nome da Escola</th>
