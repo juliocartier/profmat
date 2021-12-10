@@ -49,6 +49,7 @@ const accessToken = oAuth2Cliente.getAccessToken();
 const transport = nodemailer.createTransport({
     service: 'gmail',
     auth: {
+        segure: true,
         type: 'OAuth2',
         user: 'juliocartier@gmail.com',
         clientId: obj.authentic.CLIENT_ID,
@@ -183,14 +184,13 @@ app.post('/login', function(request, response) {
 
                     console.log("Entrou aqui")
                     response.redirect('/home');
-                    //response.render(__dirname + '/home.html');
+
                 } else {
                     response.redirect('/login');
                     response.end();
                     //	response.send('Incorrect Username and/or Password!');
                 }
-                //response.redirect('/login');
-                //response.end();
+
             }
         });
     } else {
@@ -217,9 +217,6 @@ app.get('/cadastro', authenticateToken, function(request, response) {
             response.send(JSON.stringify(error.stack))
         } else {
 
-            //console.log(results.rows)
-            //response.send(JSON.parse(JSON.stringify(results.rows)))
-            //response.render(__dirname + '/pages/cadastro-projeto.html', { data: JSON.parse(JSON.stringify(results.rows)) });
             response.status(200).render(__dirname + '/pages/cadastro-projeto.html', { results: results });
 
         }
@@ -245,17 +242,13 @@ app.put('/cadastro/:id', authenticateToken, function(request, response) {
     pool.query(sqlString, [id], function(error, results) {
 
         if (error) {
-            console.log("Entrouuu", error.stack)
+            //console.log("Entrouuu", error.stack)
 
             response.send(JSON.stringify(error.stack))
         } else {
 
             response.json(JSON.parse(JSON.stringify(results.rows)));
 
-            //console.log(results.rows)
-            //response.send(JSON.parse(JSON.stringify(results.rows)))
-            //response.render(__dirname + '/pages/cadastro-projeto.html', { data: JSON.parse(JSON.stringify(results.rows)) });
-            //response.status(200).render(__dirname + '/pages/cadastro-projeto.html', { results: results });
 
         }
 
@@ -263,8 +256,6 @@ app.put('/cadastro/:id', authenticateToken, function(request, response) {
 
     });
 
-
-    //response.render(__dirname + '/pages/cadastro-projeto.html');
 
 });
 
@@ -284,22 +275,13 @@ app.delete('/cadastro/:id', authenticateToken, function(request, response) {
             response.send(JSON.stringify(error.stack))
         } else {
 
-            //console.log(results.rows)
-            //response.send(JSON.parse(JSON.stringify(results.rows)))
-            //response.render(__dirname + '/pages/cadastro-projeto.html', { data: JSON.parse(JSON.stringify(results.rows)) });
-            //response.status(200).render(__dirname + '/pages/cadastro-projeto.html');
-
             response.json({ success: true });
-            //response.redirect('/cadastro');
 
         }
 
 
 
     });
-
-
-    //response.render(__dirname + '/pages/cadastro-projeto.html');
 
 });
 
