@@ -22,10 +22,20 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.css">
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
 
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.css" />
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid-theme.min.css" />
+ 
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.js"></script>
+
     <script>
         $.noConflict();
         jQuery(document).ready(function($) {
             console.log("document loaded");
+
+            $(function() {
+                console.log("entrou na função");
+                //gerarGrafico()
+            })
 
             $(function() {
                 $('input[name="daterange"]').daterangepicker({
@@ -79,6 +89,8 @@
 
                 console.log("Testeeeee", dataInicio, dataFim);
 
+                //gerarGrafico()
+
 
                 var trHTML = '';
                 //$('#records_table').val(trHTML);
@@ -92,35 +104,22 @@
                         dataInicio: dataInicio,
                         dataFim: dataFim
                     },
-                    success: function(data) {
-                        console.log(data);
+                    success: function(response) {
+                        //console.log(data);
 
-                        var teste = moment.locale('pt-br');
-                        for (i = 0; i < data.length; i++) {
+                        gerarGrafico(response)
 
-                            parts = data[i]["data_cadastro"].split('-');
+                        // var teste = moment.locale('pt-br');
+                        // for (i = 0; i < data.length; i++) {
 
-                            trHTML += '<tr class="text-white"><td>' + moment(data[i]["data_cadastro"]).format("DD/MM/YYYY HH:mm:ss") + '</td><td>' + data[i]["nome"] + '</td><td>' + data[i]["email"] + '</td><td>' + data[i]["uf"] + '</td><td>' + data[i]["cidade"] + '</td><td>' + data[i]["nomeescola"] + '</td><td>' + data[i]["telefone"] + '</td><td>' + data[i]["indicacaoprofessor"] + '</td><td>' + data[i]["acoes"] + '</td></tr>';
-                            //console.log($("#data_cadastro").append(data["data_cadastro"]))
-                            /*
-							<th scope="col">Nome da Escola</th>
-                            <th scope="col">Telefone</th>
-                            <th scope="col">Indicação</th>
-                            <th scope="col">Ações</th>
-							$("#data_cadastro").append(data["data_cadastro"])
-							$("#nome").append(data["nome"])
-							$("#email").append(data["email"])
-							$("#uf").append(data["uf"])
-							$("#cidade").append(data["cidade"])
-							$("#nomeescola").append(data["nomeescola"])
-							$("#telefone").append(data["telefone"])
-							$("#indicacaoprofessor").append(data["indicacaoprofessor"])
-							$("#acoes").append(data["acoes"])*/
-                        }
+                        //     parts = data[i]["data_cadastro"].split('-');
 
-                        //console.log(trHTML)
+                        //     trHTML += '<tr class="text-white"><td>' + moment(data[i]["data_cadastro"]).format("DD/MM/YYYY HH:mm:ss") + '</td><td>' + data[i]["nome"] + '</td><td>' + data[i]["email"] + '</td><td>' + data[i]["uf"] + '</td><td>' + data[i]["cidade"] + '</td><td>' + data[i]["nomeescola"] + '</td><td>' + data[i]["telefone"] + '</td><td>' + data[i]["indicacaoprofessor"] + '</td><td>' + data[i]["acoes"] + '</td></tr>';
+                        // }
 
-                        $('#records_table').append(trHTML);
+                        // //console.log(trHTML)
+
+                        // $('#records_table').append(trHTML);
 
                     },
                     error: function(jqXHR, textStatus, err) {
@@ -129,6 +128,8 @@
                 })
 
             });
+
+            
 
             $("#buscarExcel").click(function() {
                     data = $("#dataBusca").val().split("-");
@@ -177,8 +178,83 @@
                         }
                     })
                 })
+
+                function gerarGrafico(dados){
+
+
+
+                    console.log(dados)
+
+                    var MyDateField = function(config) {
+                        jsGrid.Field.call(this, config);
+                    };
+
+                    MyDateField.prototype = new jsGrid.Field({
+
+                        sorter: function(date1, date2) {
+                            return new Date(date1) - new Date(date2);
+                        },
+
+                        itemTemplate: function(value) {
+                            var formato = {
+                                day: 'numeric',
+                                month: 'numeric',
+                                year: 'numeric',
+                                hour: 'numeric',
+                                minute: 'numeric',
+                                second: 'numeric',
+                                timeZone: 'UTC'
+                            }
+                            return new Date(value).toLocaleString("pt-BR", formato)
+
+                        },
+                    });
+
+                    jsGrid.fields.date = MyDateField;
+  
+                    //$("#grid").jsGrid({
+                    $("#jsGrid").jsGrid({
+                        width: "100%",
+                        height: "400px",
+                
+                        sorting: true,
+                        autoload: true,
+                        paging: true,
+                        pageSize: 5,
+                        pageButtonCount: 5,
+                        pageIndex: 1,
+                        noDataContent: "Dados não encontrado",
+                        loadMessage: "Aguarde...",
+                        pagerFormat: "Páginas: {first} {prev} {pages} {next} {last}    {pageIndex} de {pageCount}",
+                        pagePrevText: "Ant",
+                        pageNextText: "Próx",
+                        pageFirstText: "Prim",
+                        pageLastText: "Últ",
+                
+                        data: dados,
+                
+                        fields: [
+                            //{ name: "Name", type: "text", width: 150, validate: "required" },
+                            { title: "Data", name: "data_cadastro", type: "date", width: 50 },
+                            { title: "Nome", name: "nome", type: "text", width: 50 },
+                            { title: "E-mail", name: "email", type: "text", width: 75 },
+                            { title: "Cidade", name: "cidade", type: "text", width: 50 },
+                            { title: "UF", name: "uf", type: "text", width: 50 },
+                            { title: "Nome da Escola", name: "nomeescola", type: "text", width: 50 },
+                            { title: "Telefone", name: "telefone", type: "text", width: 50 },
+                            { title: "Indicação do Professor", name: "indicacaoprofessor", type: "text", width: 50 },
+                            { title: "Ações", name: "acoes", type: "text", width: 50 }
+                            //{ name: "Address", type: "text", width: 200 },
+                            //{ type: "control" }
+                        ]
+                    });
+                }
                 // Code that uses jQuery's $ can follow here.
         });
+
+       
+
+       
         /*$(document).ready(function () {
     		console.log( "document loaded" );
 
@@ -256,7 +332,9 @@
                 </div>
             </div>
 
-            <div class="table-responsive-sm">
+            <div id="jsGrid" class="mt-5"></div>
+
+            <!--<div class="table-responsive-sm">
                 <table id="records_table" class="table">
                     <thead>
                         <tr class="text-white">
@@ -272,7 +350,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!--<tr class="text-white">
+                        <tr class="text-white">
 					  <td id="data_cadastro"></td>
 					  <td id="nome"></td>
 					  <td id="email"></td>
@@ -293,10 +371,10 @@
 					  <td id="telefone"></td>
 					  <td id="indicacaoprofessor"></td>
 					  <td id="acoes"></td>
-					</tr>-->
+					</tr>
                     </tbody>
                 </table>
-            </div>
+            </div>-->
             <!--<div class="row">
            <div class="col-md-8 mx-auto mt-5 text-center">
 	           <form action="login" method="POST">

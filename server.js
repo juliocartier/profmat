@@ -129,28 +129,66 @@ app.get('/downloadInformacoes', function(request, response) {
 });
 
 app.post('/email', function(request, response) {
+    
 
     var email = request.body.email2;
     var assunto = request.body.assunto;
     var messagem = request.body.messagem;
+    var a = request.body.a;
+    var b = request.body.b;
+
+    valores = a.split("+")
+
+    soma = parseInt(valores[0]) + parseInt(valores[1])
+    soma_recebida = parseInt(b)
+
+    if (soma == soma_recebida){
+        if (email != undefined && assunto != undefined && messagem != undefined) {
+            const mailOptions = {
+                from: email,
+                to: 'juliocartier@gmail.com, walterm@ufersa.edu.br',
+                subject: assunto,
+                text: messagem
+            };
+            //delivery
+            transport.sendMail(mailOptions, function(error, info) {
+                if (error) {
+                    console.log(error);
+                } else {
+                    console.log('Email sent: ' + info.response);
+                }
+            });
+            response.redirect('/#contato');
+        } else {
+            console.log("Valores vazios");
+            response.redirect('/#contato');
+        }
+        
+    } else {
+        console.log("Soma esta errada");
+        response.redirect('/#contato');
+    }
+
+    
+
 
     //console.log("Entrou aqui", email, assunto, messagem);
 
-    const mailOptions = {
-        from: email,
-        to: 'juliocartier@gmail.com, walterm@ufersa.edu.br',
-        subject: assunto,
-        text: messagem
-    };
-    //delivery
-    transport.sendMail(mailOptions, function(error, info) {
-        if (error) {
-            console.log(error);
-        } else {
-            console.log('Email sent: ' + info.response);
-        }
-    });
-    response.redirect('/#contato');
+    // const mailOptions = {
+    //     from: email,
+    //     to: 'juliocartier@gmail.com, walterm@ufersa.edu.br',
+    //     subject: assunto,
+    //     text: messagem
+    // };
+    // //delivery
+    // transport.sendMail(mailOptions, function(error, info) {
+    //     if (error) {
+    //         console.log(error);
+    //     } else {
+    //         console.log('Email sent: ' + info.response);
+    //     }
+    // });
+    //response.redirect('/#contato');
 
 });
 
@@ -197,6 +235,11 @@ app.post('/login', function(request, response) {
         response.send('Please enter Username and Password!');
         response.end();
     }
+});
+
+app.get('/videos', function(request, response) {
+
+    response.render(__dirname + '/pages/videos.html');
 });
 
 app.get('/home', authenticateToken, function(request, response) {

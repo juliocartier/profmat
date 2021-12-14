@@ -686,3 +686,13 @@ button span {
     background-color: #d6d8d900;
     border-color: #0dcaf0;
 }
+
+.jsgrid-pager-page {
+    padding: 0.2em 0.6em;
+    color: white;
+}
+
+.jsgrid-pager {
+    padding: 0.5em 0;
+    color: white;
+}
