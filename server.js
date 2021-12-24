@@ -8,9 +8,9 @@ var session = require('express-session');
 var bodyParser = require('body-parser');
 var nodemailer = require('nodemailer');
 const { google } = require('googleapis');
-var smtpTransport = require('nodemailer-smtp-transport')
+//var smtpTransport = require('nodemailer-smtp-transport')
 const date = require('date-and-time');
-var moment = require('moment');
+//var moment = require('moment');
 
 var excel = require('node-excel-export');
 
@@ -85,7 +85,6 @@ app.get('/projeto', function(request, response) {
 });
 
 app.post('/projeto', function(request, response) {
-    //console.log("Entrou aqqqqq", request.body.nome)
 
     var nome = request.body.nome;
     var email = request.body.email;
@@ -116,7 +115,7 @@ app.post('/projeto', function(request, response) {
             pool.end();
         }
     );
-    //response.sendFile(path.join(__dirname + '/pages/index_projeto.html'));
+
 
 });
 
@@ -129,7 +128,7 @@ app.get('/downloadInformacoes', function(request, response) {
 });
 
 app.post('/email', function(request, response) {
-    
+
 
     var email = request.body.email2;
     var assunto = request.body.assunto;
@@ -142,7 +141,7 @@ app.post('/email', function(request, response) {
     soma = parseInt(valores[0]) + parseInt(valores[1])
     soma_recebida = parseInt(b)
 
-    if (soma == soma_recebida){
+    if (soma == soma_recebida) {
         if (email != undefined && assunto != undefined && messagem != undefined) {
             const mailOptions = {
                 from: email,
@@ -150,7 +149,7 @@ app.post('/email', function(request, response) {
                 subject: assunto,
                 text: messagem
             };
-            //delivery
+
             transport.sendMail(mailOptions, function(error, info) {
                 if (error) {
                     console.log(error);
@@ -160,35 +159,12 @@ app.post('/email', function(request, response) {
             });
             response.redirect('/#contato');
         } else {
-            console.log("Valores vazios");
             response.redirect('/#contato');
         }
-        
+
     } else {
-        console.log("Soma esta errada");
         response.redirect('/#contato');
     }
-
-    
-
-
-    //console.log("Entrou aqui", email, assunto, messagem);
-
-    // const mailOptions = {
-    //     from: email,
-    //     to: 'juliocartier@gmail.com, walterm@ufersa.edu.br',
-    //     subject: assunto,
-    //     text: messagem
-    // };
-    // //delivery
-    // transport.sendMail(mailOptions, function(error, info) {
-    //     if (error) {
-    //         console.log(error);
-    //     } else {
-    //         console.log('Email sent: ' + info.response);
-    //     }
-    // });
-    //response.redirect('/#contato');
 
 });
 
@@ -242,6 +218,28 @@ app.get('/videos', function(request, response) {
     response.render(__dirname + '/pages/videos.html');
 });
 
+app.post('/videos', function(request, response) {
+
+    sqlString = "SELECT * FROM CADASTRO_PROJETOS ORDER BY ID"
+
+    pool.query(sqlString, function(error, results) {
+
+        if (error) {
+            console.log(error.stack)
+
+            response.send(JSON.stringify(error.stack))
+        } else {
+
+            response.send(JSON.parse(JSON.stringify(results.rows)))
+
+        }
+
+
+
+    });
+
+});
+
 app.get('/home', authenticateToken, function(request, response) {
 
     response.render(__dirname + '/pages/home.html');
@@ -268,8 +266,6 @@ app.get('/cadastro', authenticateToken, function(request, response) {
 
     });
 
-
-    //response.render(__dirname + '/pages/cadastro-projeto.html');
 
 });
 
@@ -306,7 +302,7 @@ app.delete('/cadastro/:id', authenticateToken, function(request, response) {
 
     id = parseInt(request.body.id);
 
-    console.log("Entrouuuuu", id)
+    //console.log("Entrouuuuu", id)
     sqlString = "DELETE FROM CADASTRO_PROJETOS WHERE id = $1"
 
 
@@ -363,17 +359,11 @@ app.post('/buscarDadosPorData', function(request, response) {
 
     });
 
-    //console.log("Entrou aqui", sqlString)
 
 });
 
 app.post('/buscarExcel', function(request, response) {
 
-
-    //console.log(request.body['data'])
-
-    //dataInicio = request.body['dataInicio'];
-    //dataFim = request.body['dataFim'];
 
     dataInicio = "'" + request.body['dataInicio'].split("/").reverse().join("-").replace(/\s+/g, '') + "'";
     dataFim = "'" + request.body['dataFim'].split("/").reverse().join("-").replace(/\s+/g, '') + "'";
@@ -390,59 +380,57 @@ app.post('/buscarExcel', function(request, response) {
             }
         }
     };
-    //console.log("Entrouuuu aquiiii");
 
-    // export structure
     let specification = {
-        id: { // <- the key should match the actual data key
-            displayName: 'Id', // <- Here you specify the column header
+        id: {
+            displayName: 'Id',
             headerStyle: styles.headerDark,
-            width: 120 // <- width in pixels
+            width: 120
         },
         data_cadastro: {
             displayName: 'Data de Cadastro',
             headerStyle: styles.headerDark,
-            width: 220 // <- width in pixels
+            width: 220
         },
         nome: {
             displayName: 'Nome',
             headerStyle: styles.headerDark,
-            width: 220 // <- width in pixels
+            width: 220
         },
         email: {
             displayName: 'E-mail',
             headerStyle: styles.headerDark,
-            width: 220 // <- width in pixels
+            width: 220
         },
         uf: {
             displayName: 'UF',
             headerStyle: styles.headerDark,
-            width: 220 // <- width in pixels
+            width: 220
         },
         cidade: {
             displayName: 'Cidade',
             headerStyle: styles.headerDark,
-            width: 220 // <- width in pixels
+            width: 220
         },
         nomeescola: {
             displayName: 'Nome da Escola',
             headerStyle: styles.headerDark,
-            width: 220 // <- width in pixels
+            width: 220
         },
         telefone: {
             displayName: 'Telefone',
             headerStyle: styles.headerDark,
-            width: 220 // <- width in pixels
+            width: 220
         },
         indicacaoprofessor: {
             displayName: 'Indicação do Professor',
             headerStyle: styles.headerDark,
-            width: 220 // <- width in pixels
+            width: 220
         },
         acoes: {
             displayName: 'Ações',
             headerStyle: styles.headerDark,
-            width: 220 // <- width in pixels
+            width: 220
         }
     };
 
@@ -458,15 +446,6 @@ app.post('/buscarExcel', function(request, response) {
             response.send(JSON.stringify(error.stack))
         } else {
 
-            /*let dataset = [
-                { customer_name: 'IBM', status_id: 1, note: 'some note', misc: 'not shown' },
-                { customer_name: 'HP', status_id: 0, note: 'some note' },
-                { customer_name: 'MS', status_id: 0, note: 'some note', misc: 'not shown' }
-            ];*/
-
-            //console.log(results.rows[0].id)
-            //console.log(JSON.stringify(results.rows.id))
-            //let dataset = [{ customer_name: results.rows[0].id }]
             let dataset = []
             for (i = 0; i < results.rowCount; i++) {
                 dataset.push({
@@ -486,17 +465,13 @@ app.post('/buscarExcel', function(request, response) {
             console.log(dataset)
 
 
-            // Create the excel report.
-            // This function will return Buffer
             let report = excel.buildExport(
-                [ // <- Notice that this is an array. Pass multiple sheets to create multi sheet report
-                    {
-                        name: 'Incrições', // <- Specify sheet name (optional)
-                        specification: specification, // <- Report specification
-                        data: dataset // <-- Report data
-                            //data: results.rows
-                    }
-                ]
+                [{
+                    name: 'Incrições', // <- Specify sheet name (optional)
+                    specification: specification, // <- Report specification
+                    data: dataset // <-- Report data
+                        //data: results.rows
+                }]
             );
 
             // convert excel file content to base64 and send to a client
@@ -514,23 +489,18 @@ app.post('/cadastro', authenticateToken, function(request, response) {
 
     var id = request.body.id;
     var nome = request.body.nome;
-    var status = request.body.status;
     var resumo = request.body.resumo;
-    var texto = request.body.texto;
-
-    console.log("Entrouuu no id", !id)
 
     var data = new Date();
     data_insert = date.format(data, 'YYYY-MM-DD HH:mm:ss');
     //console.log(request.body.uf);
 
-    const text = "INSERT INTO CADASTRO_PROJETOS(titulo_do_projeto, resumo, texto_projeto, status) VALUES ($1, $2, $3, $4)";
-    const valores = [nome, resumo, texto, status]
+    const text = "INSERT INTO CADASTRO_PROJETOS(titulo_do_projeto, resumo) VALUES ($1, $2)";
+    const valores = [nome, resumo]
 
-    const sqlStringUpdate = "UPDATE CADASTRO_PROJETOS SET titulo_do_projeto = $1, resumo = $2, texto_projeto = $3, status = $4 WHERE id = $5";
-    const valoresUpdate = [nome, resumo, texto, status, id]
+    const sqlStringUpdate = "UPDATE CADASTRO_PROJETOS SET titulo_do_projeto = $1, resumo = $2 WHERE id = $5";
+    const valoresUpdate = [nome, resumo, id]
 
-    //console.log(text, valores)
     if (!id) {
         pool.query(text, valores,
             (err, res) => {
@@ -541,7 +511,7 @@ app.post('/cadastro', authenticateToken, function(request, response) {
                     response.json({ success: true });
                 }
 
-                //pool.end();
+                pool.end();
             }
         );
     } else {
@@ -555,15 +525,12 @@ app.post('/cadastro', authenticateToken, function(request, response) {
                     response.json({ success: true });
                 }
 
-                //pool.end();
+                pool.end();
             }
         );
 
     }
 
-    //console.log("EEEEEEEE");
-    //response.redirect('/cadastro');
-    //response.sendFile(path.join(__dirname + '/pages/cadastro-projeto.html'));
 
 });
 
@@ -587,7 +554,6 @@ app.get('/projetosEmAndamento', function(request, response) {
 
             console.log(results);
             response.send(JSON.parse(JSON.stringify(results.rows)))
-                //response.status(200).render(__dirname + '/pages/index_projeto.html', { results: results });
 
         }
 
@@ -601,12 +567,7 @@ function generateAcessToken(user) {
 
 function authenticateToken(req, res, next) {
 
-    //console.log("Entrouuu", acessToken)
-    //const authHeader = req.headers['authorization']
-    //const authHeader = acessToken
     const token = acessToken
-        //const token = authHeader && authHeader.split(' ')[1]
-    console.log(token)
 
     if (token == null) return res.sendStatus(401)
 

@@ -9,6 +9,45 @@
     <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+
+    <script>
+        $.noConflict();
+        jQuery(document).ready(function($) {
+            console.log("document loaded");
+
+            $.ajax({
+                url: '/videos',
+                type: 'POST',
+                cache: false,
+                success: function(response) {
+                    console.log(response);
+
+                    //$("#frame").attr("src", "https://www.youtube.com/embed/P_kFS3jhJ80");
+
+                    for (var i = 0; i < response.length; i++) {
+                        //console.log("Teste = ", i, " ", response[i]["resumo"])
+                        var url_link = response[i]['resumo'].replace("watch?v=", "embed/");
+                        //console.log("'" + url_link.replace("&ab_channel=JulioCartier", "") + "'")
+
+                        $("#frame").attr("src", url_link.replace("&ab_channel=JulioCartier", ""));
+                        //console.log(i, " ", url)
+                    }
+
+                }
+            })
+
+            //$("#id").hide()
+
+
+
+            // Code that uses jQuery's $ can follow here.
+        });
+    </script>
+
+
 </head>
 
 <body>
@@ -52,8 +91,14 @@
             </div>
 
             <div class="row">
-                <div class="col-md-8 mx-auto mt-5 text-center">
-                   
+                <div class="col-md-12 mx-auto mt-5 text-center">
+                    <div class="embed-responsive embed-responsive-16by9">
+                        <iframe class="embed-responsive-item" id="frame" src="" target="_parent"></iframe>
+                    </div>
+                    <!--<div class="embed-responsive embed-responsive-16by9">
+                        <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/1PY2qXCL1H0" target="_parent"></iframe>
+                        <iframe class="embed-responsive-item" src="https://youtu.be/VkI3XStQuQ4" allowfullscreen></iframe>
+                    </div>-->
                 </div>
             </div>
         </div>

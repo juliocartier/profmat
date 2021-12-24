@@ -78,9 +78,7 @@
                         console.log("Entrou aqui 2", result[0]['titulo_do_projeto']);
                         $("#id").val(result[0]["id"])
                         $("#nome").val(result[0]["titulo_do_projeto"])
-                        $("#status").val(result[0]["status"])
                         $("#resumo").val(result[0]["resumo"])
-                        $("#texto").val(result[0]["texto_projeto"])
 
                         //window.location.reload();
                     },
@@ -94,18 +92,14 @@
 
                     id = $("#id").val()
                     nome = $("#nome").val()
-                    status = $("#status").val()
                     resumo = $("#resumo").val()
-                    texto = $("#texto").val()
 
                     console.log(id)
 
                     dados = {
                         id,
                         nome,
-                        status,
                         resumo,
-                        texto
                     }
 
                     console.log(dados);
@@ -173,20 +167,11 @@
                             <label for="formGroupExampleInput" class="text-white">Titulo do Projeto</label>
                             <input type="text" class="form-control" id="nome" name="nome" placeholder="Titulo do Projeto">
 
-                            <label for="formGroupExampleInput" class="text-white">Status</label>
-                            <select class="form-select" id="status" name="status" aria-label="Default select example">
-                                <option value="andamento">Andamento</option>
-                                <option value="encerrado">Encerrado</option>
-                                <option value="breve">Em Breve</option>
-                              </select>
-
-                            <label for="messagem" class="text-white">Resumo</label>
-                            <textarea class="form-control" id="resumo" name="resumo" rows="3"></textarea>
-
-                            <label for="messagem" class="text-white">Texto</label>
-                            <textarea class="form-control" id="texto" name="texto" rows="3"></textarea>
+                            <label for="formGroupExampleInput" class="text-white">Link do Vídeo</label>
+                            <input type="text" class="form-control" id="resumo" name="resumo" placeholder="Link do Vídeo">
                         </div>
-                        <button id="btnEnviar" class="btn btn-primary">Enviar</button>
+
+                        <button id="btnEnviar" class="btn btn-primary mt-3">Enviar</button>
                     </form>
                 </div>
             </div>
@@ -213,7 +198,7 @@
         <div class="container mt-4">
             <div class="row">
                 <div class="col-sm-12 mt-5 text-center text-white">
-                    <h3>Listagem dos Projetos</h3>
+                    <h3>Listagem dos Vídeos</h3>
                 </div>
             </div>
 
@@ -222,10 +207,8 @@
                     <thead>
                         <tr class="text-white">
                             <th scope="col">ID</th>
-                            <th scope="col">Titulo do Projeto</th>
-                            <th scope="col">Resumo</th>
-                            <th scope="col">Texto do Projeto</th>
-                            <th scope="col">Status</th>
+                            <th scope="col">Titulo do Vídeo</th>
+                            <th scope="col">Link do Vídeo</th>
                             <th scope="col">Alterar</th>
                             <th scope="col">Deletar</th>
                         </tr>
@@ -242,12 +225,6 @@
                                 </td>
                                 <td>
                                     <%= results.rows[i].resumo %>
-                                </td>
-                                <td>
-                                    <%= results.rows[i].texto_projeto %>
-                                </td>
-                                <td>
-                                    <%= results.rows[i].status %>
                                 </td>
                                 <td>
                                     <button type="button" id="alterar" class="btnSelectAlterar btn btn-info"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
