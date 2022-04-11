@@ -102,13 +102,11 @@ app.post('/projeto', function(request, response) {
     const text = "INSERT INTO PROJETOS(nome, email, uf, cidade, nomeEscola, telefone, indicacaoProfessor, acoes, data_cadastro) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)";
     const valores = [nome, email, uf, cidade, nomeEscola, telefone, indicacao, messagem, data_insert]
 
-    console.log(text, valores)
     pool.query(text, valores,
         (err, res) => {
             if (err) {
                 console.log(err.stack)
             } else {
-                console.log("Valores Inseridos", res);
                 response.json({ success: true });
             }
 
@@ -125,6 +123,10 @@ app.get('/download', function(request, response) {
 
 app.get('/downloadInformacoes', function(request, response) {
     response.download(__dirname + '/public/BancaApres.pdf');
+});
+
+app.get('/downloadMaterial', function(request, response) {
+    response.download(__dirname + '/public/arquivo1.pptx');
 });
 
 app.post('/email', function(request, response) {
@@ -191,12 +193,12 @@ app.post('/login', function(request, response) {
                     const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET)
                     refreshTokens.push(refreshToken)
 
-                    console.log(accessToken)
+                    //console.log(accessToken)
 
                     request.session.loggedin = true;
                     request.session.username = username;
 
-                    console.log("Entrou aqui")
+                    //console.log("Entrou aqui")
                     response.redirect('/home');
 
                 } else {
@@ -230,6 +232,7 @@ app.post('/videos', function(request, response) {
             response.send(JSON.stringify(error.stack))
         } else {
 
+            //console.log(results)
             response.send(JSON.parse(JSON.stringify(results.rows)))
 
         }
@@ -253,7 +256,7 @@ app.get('/cadastro', authenticateToken, function(request, response) {
     pool.query(sqlString, function(error, results) {
 
         if (error) {
-            console.log("Entrouuu", error.stack)
+            //console.log("Entrouuu", error.stack)
 
             response.send(JSON.stringify(error.stack))
         } else {
@@ -273,7 +276,7 @@ app.put('/cadastro/:id', authenticateToken, function(request, response) {
 
     id = parseInt(request.body.id);
 
-    console.log("Entrouuuu 22", id);
+    //console.log("Entrouuuu 22", id);
 
     sqlString = "SELECT * FROM CADASTRO_PROJETOS WHERE ID = $1"
 
@@ -507,7 +510,7 @@ app.post('/cadastro', authenticateToken, function(request, response) {
                 if (err) {
                     console.log(err.stack)
                 } else {
-                    console.log("Valores Inseridos", res);
+                    //console.log("Valores Inseridos", res);
                     response.json({ success: true });
                 }
 
@@ -521,7 +524,7 @@ app.post('/cadastro', authenticateToken, function(request, response) {
                 if (err) {
                     console.log(err.stack)
                 } else {
-                    console.log("Valores Atualizados", res);
+                    //console.log("Valores Atualizados", res);
                     response.json({ success: true });
                 }
 
@@ -552,7 +555,7 @@ app.get('/projetosEmAndamento', function(request, response) {
             response.send(JSON.stringify(error.stack))
         } else {
 
-            console.log(results);
+            //console.log(results);
             response.send(JSON.parse(JSON.stringify(results.rows)))
 
         }

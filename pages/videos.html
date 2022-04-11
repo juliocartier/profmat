@@ -26,13 +26,15 @@
                     console.log(response);
 
                     //$("#frame").attr("src", "https://www.youtube.com/embed/P_kFS3jhJ80");
-
                     for (var i = 0; i < response.length; i++) {
-                        //console.log("Teste = ", i, " ", response[i]["resumo"])
-                        var url_link = response[i]['resumo'].replace("watch?v=", "embed/");
-                        //console.log("'" + url_link.replace("&ab_channel=JulioCartier", "") + "'")
+                        console.log("Teste = ", i, " ", response[i]["resumo"])
+                        link_video = "<iframe class='embed-responsive-item' width='560' height='315' id='frame' src='" + response[i]["resumo"] + "' target='_parent'></iframe> <br>"
 
-                        $("#frame").attr("src", url_link.replace("&ab_channel=JulioCartier", ""));
+                        console.log(link_video)
+                            //var url_link = response[i]['resumo'].replace("watch?v=", "embed/");
+                            //console.log("'" + url_link.replace("&ab_channel=JulioCartier", "") + "'")
+                        $("#videosLink").append(link_video);
+                        //$("#frame").attr("src", url_link.replace("&ab_channel=JulioCartier", ""));
                         //console.log(i, " ", url)
                     }
 
@@ -93,7 +95,8 @@
             <div class="row">
                 <div class="col-md-12 mx-auto mt-5 text-center">
                     <div class="embed-responsive embed-responsive-16by9">
-                        <iframe class="embed-responsive-item" id="frame" src="" target="_parent"></iframe>
+                        <!--<iframe class="embed-responsive-item" width="560" height="315" id="frame" src="" target="_parent"></iframe>-->
+                        <div id="videosLink"></div>
                     </div>
                     <!--<div class="embed-responsive embed-responsive-16by9">
                         <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/1PY2qXCL1H0" target="_parent"></iframe>
