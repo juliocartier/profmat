@@ -42,7 +42,7 @@ const pool = new Pool({
     port: obj.banco.port,
 })
 
-const oAuth2Cliente = new google.auth.OAuth2(obj.authentic.CLIENT_ID, obj.authentic.CLIENT_SECRET, obj.authentic.REDIRECT_URI)
+/*const oAuth2Cliente = new google.auth.OAuth2(obj.authentic.CLIENT_ID, obj.authentic.CLIENT_SECRET, obj.authentic.REDIRECT_URI)
 oAuth2Cliente.setCredentials({ refresh_token: obj.authentic.REFRESH_TOKEN })
 
 const accessToken = oAuth2Cliente.getAccessToken();
@@ -57,7 +57,7 @@ const transport = nodemailer.createTransport({
         refreshToken: obj.authentic.REFRESH_TOKEN,
         accessToken: accessToken
     }
-})
+})*/
 
 app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css'));
 app.use('/js', express.static(__dirname + '/node_modules/bootstrap/dist/js'));
@@ -152,13 +152,13 @@ app.post('/email', function(request, response) {
                 text: messagem
             };
 
-            transport.sendMail(mailOptions, function(error, info) {
+            /*transport.sendMail(mailOptions, function(error, info) {
                 if (error) {
                     console.log(error);
                 } else {
                     console.log('Email sent: ' + info.response);
                 }
-            });
+            });*/
             response.redirect('/#contato');
         } else {
             response.redirect('/#contato');
@@ -189,9 +189,9 @@ app.post('/login', function(request, response) {
 
                     //const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET)
                     //const accessToken = generateAcessToken(user)
-                    acessToken = generateAcessToken(user)
-                    const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET)
-                    refreshTokens.push(refreshToken)
+                    //acessToken = generateAcessToken(user)
+                    //const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET)
+                    //refreshTokens.push(refreshToken)
 
                     //console.log(accessToken)
 
