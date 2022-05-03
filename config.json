@@ -9,9 +9,9 @@
 
     "authentic": {
         "CLIENT_ID": "1005697518083-vd1kegae5gt71duvipp5sfjpm0uf0i0m.apps.googleusercontent.com",
-        "CLIENT_SECRET": "YWV6isHBR_A4OE6RgGpar4Xr",
+        "CLIENT_SECRET": "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",
         "REDIRECT_URI": "https://developers.google.com/oauthplayground",
-        "REFRESH_TOKEN": "1//04acCyneBK9JdCgYIARAAGAQSNwF-L9IrSorznzbxc-E8L5wFHWdCqHCjKfGPWo79YSd3Fmp2ePFMk-x7CndOXS_J5BGvORIKuj8"
+        "REFRESH_TOKEN": "1//04ZeQi19egSGxCgYIARAAGAQSNwF-L9Irnp1E4NuNoK7JKV_9nflN0AagvgX_-O3vkqKYljnT29jYsJdRZJncONKulxuG9HDz66Q"
     }
 
 }
