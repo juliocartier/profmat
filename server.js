@@ -17,6 +17,8 @@ var excel = require('node-excel-export');
 const jwt = require('jsonwebtoken')
 
 var app = express();
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
 
 app.set('view engine', 'ejs');
 app.engine('html', require('ejs').renderFile);
@@ -135,13 +137,14 @@ app.post('/email', function(request, response) {
     var email = request.body.email2;
     var assunto = request.body.assunto;
     var messagem = request.body.messagem;
-    var a = request.body.a;
-    var b = request.body.b;
+    var valor_a = request.body.a;
+    var valor_b = request.body.b;
 
-    valores = a.split("+")
+    valores = valor_a.split(' + ')
+    console.log("Valoressss", request.body.valor_a)
 
     soma = parseInt(valores[0]) + parseInt(valores[1])
-    soma_recebida = parseInt(b)
+    soma_recebida = parseInt(valor_b)
 
     if (soma == soma_recebida) {
         if (email != undefined && assunto != undefined && messagem != undefined) {
