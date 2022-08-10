@@ -2,4 +2,3 @@ node_modules/
 .vscode/
 .git
 .env
-config.json

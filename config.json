@@ -1,0 +1,17 @@
+{
+    "banco": {
+        "user": "hkqapbhp",
+        "host": "fanny.db.elephantsql.com",
+        "database": "hkqapbhp",
+        "password": "P5NwSmkvPb8jDateB3So6uQTzE5ySCne",
+        "port": 5432
+    },
+
+    "authentic": {
+        "CLIENT_ID": "1005697518083-vd1kegae5gt71duvipp5sfjpm0uf0i0m.apps.googleusercontent.com",
+        "CLIENT_SECRET": "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",
+        "REDIRECT_URI": "https://developers.google.com/oauthplayground",
+        "REFRESH_TOKEN": "1//04ZeQi19egSGxCgYIARAAGAQSNwF-L9Irnp1E4NuNoK7JKV_9nflN0AagvgX_-O3vkqKYljnT29jYsJdRZJncONKulxuG9HDz66Q"
+    }
+
+}
